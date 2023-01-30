@@ -1,0 +1,120 @@
+#!/bin/zsh
+
+# analyze_wordle_list_analyzer.dev: development version of
+# wordle_list_analyzer.zsh: script to tabulate letters in unsolved positions
+# and display frequency of letters in those positions in remaining wordle
+# answer set
+
+# Developed on macos 16.1 (21.6.0 Darwin Kernel Version 21.6.0: root:xnu-8020.240.7~1/RELEASE_X86_64)
+# and zsh (zsh 5.8.1 (x86_64-apple-darwin21.0)
+
+# v0.01 11/24/22 gsb: basic functionality and debugging
+
+# Added so far in this version: proper handling of variables passed from main, list total letter frequency
+# of list of remaining answers, not just by position, changed analysis to be based on unused answers
+
+# To be added: change y/n questions not to exit on invalid entry, ...
+
+# Clear tmp files
+if [[ -e letter_list.tmp ]]; then
+  rm letter_list.tmp
+  touch letter_list.tmp
+fi
+
+# Check if input file exists
+  if [[ -e list_$i.txt ]]
+    then
+    print
+    print "Wordle word list analyzer"
+    print
+    COUNT=$(wc -l < list_$i.txt)
+    COUNT=${COUNT// }
+    print "Current answer list (list_$i.txt) contains $COUNT words"
+    print -n "Display list? (y/n):"
+    read -r RESP0
+    if [[ $RESP0 = "y" ]]
+      then
+      cat list_$i.txt
+    fi
+  else
+    print "list_$1.txt not found. - Exiting"
+    exit 1
+  fi
+
+# Create a more limited set of possible answers based on unused_wordle_answers.txt
+  grep -f list_$i.txt unused_wordle_answers.txt > abridged_wordle_answer_list.txt
+  print
+  COUNT=$(wc -l < abridged_wordle_answer_list.txt)
+  COUNT=${COUNT// }
+  print "Answer list based on unused wordle answers contains $COUNT words"
+
+  # Calculate total letter frequency of all words in  abridged answer list
+  print
+  print "Combined letter frequency of all words in abridged_wordle_answer_list.txt:"
+  grep -o . abridged_wordle_answer_list.txt | sort -f | uniq -ic | sort -nr
+
+  # Find the number of words containing each individual letter
+  for letter in {a..z}; do
+    CNT=$(grep "$letter" abridged_wordle_answer_list.txt | uniq | wc -l)
+    CNT=${CNT// }
+    if  [[ $CNT -ge 1 ]]; then
+      fletter="${CNT} $letter"
+      echo $fletter >> letter_list.tmp
+    fi
+  done
+  print
+  print "Number of words containing each letter:"
+  cat letter_list.tmp | sort -rn | uniq
+  print
+  print "Hint: When choosing letters for next guess, it is more efficient to choose letters"
+  print "which appear in ~50% of the words."
+  print
+
+  # Tabulate letter frequency in those positions where no exact match has been found
+  print
+  print "So far, \$ANSWER is $ANSWER"
+
+  # Find which positions $ANSWER lacks identified letter
+
+  for n in {0..4}; do
+    POSITION=$(( n+1 ))
+    #print "The letter at position $POSITION in \$ANSWER is ${ANSWER:$n:1}"
+    if [[ ${ANSWER:$n:1} = "." ]]; then
+      print
+      print "No previously guessed letter in position $POSITION."
+      # now tabulate the letters in that position in word list,
+      # count the frequency, and display
+      POSSIBLE[$POSITION]=$(cut -c $POSITION abridged_wordle_answer_list.txt | sort | uniq -c | sort -nr)
+      print "Frequency of letters in position $POSITION in remaining possible answers:"
+      print $POSSIBLE[$POSITION]
+
+    else
+      print
+      print "The letter in position $POSITION is ${ANSWER:$n:1}"
+    fi
+  done
+
+  print -n "Display abridged answer list? (y/n):"
+  read -r RESP1
+  if [[ $RESP1 = "y" ]]; then
+    print
+    cat abridged_wordle_answer_list.txt
+  fi
+
+  print
+  print "Completed"
+
+  # Remove tmp files
+  if [[ -e letter_list.tmp ]]; then
+    rm letter_list.tmp
+  fi
+
+
+  if [[ "$VERBOSITY" -ge 1 ]]; then
+    print "Returning execution to wordle_solver.master.dev"
+  fi
+
+  return
+
+
+

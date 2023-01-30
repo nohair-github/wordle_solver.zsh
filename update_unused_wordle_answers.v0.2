@@ -1,0 +1,55 @@
+#!/bin/zsh
+
+# update_unused_wordle_answers.dev.zsh
+# Updates file unused_wordle_answers.txt by removing current answer from list
+
+print "\$ANSWER is $ANSWER"
+
+# Add answer to past_wordle_answers.txt
+
+# Sort past_wordle_answers.txt alphabetically
+
+# Remove corrected_unused_wordle_answers.txt if exists
+if [ -e corrected_unused_wordle_answers.txt ]
+then
+  if [ "$VERBOSITY" = "1" ]; then
+    print "corrected_unused_wordle_answers.text exists ... deleting"
+  fi
+  rm corrected_unused_wordle_answers.txt
+  print "Done"
+fi
+touch corrected_unused_wordle_answers.txt
+
+lines=$(wc -l < unused_wordle_answers.txt)
+if [ "$VERBOSITY" = "1" ]; then
+  print "unused_wordle_answers.txt contains $lines lines"
+  print "Deleting $ANSWER from unused_wordle_answers.txt"
+fi
+
+grep -v "$ANSWER" unused_wordle_answers.txt > corrected_unused_wordle_answers.txt
+
+# Check for grep errors
+  if [[ $? -ge "2" ]]
+  then  
+    print -n "Error in grep - Exiting."
+    exit 1
+  fi
+
+lines=$(wc -l < corrected_unused_wordle_answers.txt)
+
+if [ "$VERBOSITY" = "1" ]; then
+  print "corrected_unused_wordle_answers.txt now contains $lines lines"
+fi
+
+print "Updating unused_wordle_answers.txt ..."
+
+cat corrected_unused_wordle_answers.txt > unused_wordle_answers.txt
+
+lines=$(wc -l < unused_wordle_answers.txt)
+if [ "$VERBOSITY" = "1" ]; then
+  print "unused_wordle_answers.txt now contains $lines lines"
+fi
+
+print "... Done."
+
+return

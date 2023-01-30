@@ -1,0 +1,319 @@
+#!/bin/zsh
+
+# wordle_solver.master.v0.2
+# Wordle solver script by gsb
+
+# Developed on macos 12.6 and zsh 5.8.1
+
+print
+print "Wordle Solver"
+
+# Version 0.01 (11/20/22): getting script to function, including lots of diagnostic
+# and debug messages.
+
+# Version 0.02 (11/23/22): Less debug and extraneous messages, more informative messaging, corrected
+# formatting, correcting and improving logic, correcting regexs, changing variable names to all caps.
+
+# Version 0.03 (11/24/22): Added basic analysis subroutine, added more error trapping,
+# edited messages to be more informative, somewhat less debug and extraneous messages, more informative,
+# improving logic.
+
+# Version 0.031: last unitary script.
+
+# Version 0.04 (12/23/22): Split matching steps into subprograms, re-ordered matching logic and sequence,
+# added logic to deal with duplicate letters in guesses and answers, initial input loop changes to allow typos,
+# incorporation of Wordle's allowed guesses list
+
+# Version 0.1 (1/14/23): Added since v0.04 -
+# list-$i.txt copied to $ANSWER if one solution left,
+# link changed to update_unused_wordle_answers.txt.zsh,
+# corrected references to list_$i.txt and list.tmp so they are updated when exiting subroutine,
+# addition of verbosity switches in some locations,
+# checking validity of response and trap errors,
+# change y/n input loops where appropriate to handle invalid answers without exiting,
+# better analysis after each guess to include total letter frequency not just by position (analyzer subroutine),
+# incorporation of list of unused answers reducing universe of possibles (analyzer subroutine),
+# bug fixes, improved handling of words with duplicate letters,
+# added option flags for -v --verbose, and -q --quiet,
+# improved logic and algoritm to eliminate unmatched letters.
+
+# Version 0.2 (2/27/23): Added since v0.1 -
+# began supporting --debug flag and altering --verbose switches, fixed handling of null input in part 2 script,
+# fixed handling of duplicate letters in part2, changed part 3 script to automatically select unmatched letters,
+# continued standardization of ['s to [['s and variable quoting inside brackets, changed wordle_list_analyzer
+# to display data based on unused answer list, fixed input loop on part2 to handle invalid answers, further bug fixes
+
+# To be done: module to suggest guesses, further bug fixes, complete and debug testing user input for validity
+# in parts 1 and 2, fix additional input loops to handle erroneous inout without exit, better tabulation of progress,
+# add additional verbose and debug verbosity switches, standardize ['s to [['s, and more tbd
+
+
+VERBOSITY=0
+
+usage()
+{
+  echo " usage: wordle_solver.master.v0.2 [ -q --quiet ] [ -v --verbose ] [ -d --debug ] [ -h --help ] "
+}
+
+error()
+{
+  echo " error: only one flag allowed"
+}
+
+while [[ "$1" != "" ]]; do
+  if [[ "$2" != "" ]]; then
+    error
+    usage
+    exit 1
+  else
+    case $1 in
+        -q | --quiet )          VERBOSITY=0
+                                ;;
+        -v | --verbose )        VERBOSITY=1
+                                ;;
+        -d | --debug )          VERBOSITY=2
+                                ;;
+        -h | --help )           usage
+                                ;;
+        * )                     usage
+                                exit 1
+    esac
+  fi
+  shift
+done 
+
+if [[ "$VERBOSITY" = 0 ]]; then
+  DESCRIPTION="quiet (default)"
+elif [[ "$VERBOSITY" = 1 ]]; then
+  DESCRIPTION="verbose"
+elif [[ "$VERBOSITY" = 2 ]]; then
+  DESCRIPTION="debug"
+else
+  print "Error in setting verbosity - Exiting"
+  exit
+fi
+
+if [[ "$VERBOSITY" -eq 2 ]]; then
+  print "(wordle_solver.master.v0.2 script)"
+fi
+
+if [[ "$VERBOSITY" -ge 1 ]]; then
+  print "Verbosity level is $VERBOSITY - $DESCRIPTION"
+fi
+print
+
+# Define array of guessed words
+declare -a GUESS
+
+# Create/clear tmp files
+
+if [[ -e list.tmp ]]; then
+  rm list.tmp
+fi
+touch list.tmp
+
+if [[ -e list_1.txt ]]; then
+  rm list_1.txt
+fi
+touch list_1.txt
+
+
+# Preload list.tmp with Wordle answer list
+cat wordle_answers.txt > list.tmp
+TOTAL=$(wc -l < list.tmp)
+TOTAL=${TOTAL// }
+
+# Create ANSWER with 5 dots
+ANSWER="....."
+
+# Main loop through guesses 1-6
+
+for i in {1..6}; do
+#begin main do loop to enter guesses
+
+  # Input guesses and check that they ware in the Wordle valid guess list
+
+  VALID=0
+
+  while [[ "$VALID" -eq 0 ]]; do
+  # do loop to check guess validity
+    print "Enter guesses as 5 letter word lowercase."
+    print -n "Enter guess word no. $i:"
+    read -r RESP1
+    LEN="${#RESP1}"
+    if [[ "$LEN" -eq 5 ]]; then
+      grep -q "$RESP1" full_valid_guess_list.txt
+      if [ $? -ne 0 ]; then
+        print "$RESP1 is not a valid guess."
+      
+      else 
+        VALID=1
+        if [[ "$VERBOSITY" -ge 1 ]]; then
+          print "$RESP1 appears to be a valid guess"
+        fi
+
+      fi
+
+    else
+      print "Guess must be 5 letters."
+ 
+    fi
+
+  # end do loop to check guess validity
+  done
+
+  # Check that we exited the input loop because $RESP1 was valid (i.e. VALID=1)
+  # and not because read had an error (e.g., the user pressed Ctrl-D)
+  
+  if [[ "$VALID" -eq 0 ]]; then
+    echo >&2 "There was an error in input."
+    exit 1
+  else
+    # Confirm guess
+    print
+    GUESS[$i]="$RESP1"
+    if [[ "$VERBOSITY" -eq 2 ]]; then
+      print
+      print -n "GUESS[$i] is ${GUESS[$i]}."
+      print
+    fi
+  fi
+
+  # Call subscript part 1: Select words in list which contain perfectly matched letters in the proper position.
+
+  if [[ "$VERBOSITY" -ge 1 ]]; then
+    print "calling subscript wordle_solver.part1.v0.2"
+    print
+  fi
+
+  . ./wordle_solver.part1.v0.2
+
+  if [[ "$VERBOSITY" -eq 2 ]]; then
+    print "execution returned to main script"
+    print
+  fi
+
+  # Call subscript part 2: Select woords which contain partially matched letters and sliminate words
+  # which contain partially matched letters in the wrong position.
+
+  if [[ "$VERBOSITY" -ge 1 ]]; then
+    print "calling subscript wordle_solver.part2.v0.2"
+    print
+  fi
+
+  . ./wordle_solver.part2.v0.2
+
+  print
+
+  if [[ "$VERBOSITY" -eq 2 ]]; then
+    print "execution returned to main script"
+    print
+  fi
+
+  # Call subscript part 3: Eliminate words in list which contain unmatched letters.
+
+  if [[ "$VERBOSITY" -eq 2 ]]; then
+    print "calling subscript wordle_solver.part3.v0.2"
+    print
+  fi
+
+  . ./wordle_solver.part3.v0.2
+
+  print
+
+  if [[ "$VERBOSITY" -ge 1 ]]; then
+    print "execution returned to main script"
+    print
+  fi
+
+  # Now review results after the current guess
+
+  print
+  print "Summary of results after guess no. $i:"
+
+  # Tabulate and display results
+  CNT=$(wc -l < list_"$i".txt)
+  CNT=${CNT// }
+  DISCARD=$(( $TOTAL-$CNT ))
+  print "$TOTAL initial words, $DISCARD words eliminated, $CNT words remaining."
+  print
+
+  # If there is only one word remaining
+  if [[ "$CNT" -eq 1 ]]; then
+    print "Wordle is solved. The answer is:"
+    ANSWER=$( cat list_"$i".txt )
+    print
+    print "$ANSWER"
+    print
+
+    VALID=0
+    while [[ "$VALID" -eq 0 ]]; do
+      print -n "Update unused_wordle_answers.txt? (y/n)"
+      read -r RESP2
+      if [[ "$RESP2" = "y" ]]; then
+        . ./update_unused_wordle_answers.txt.zsh
+        VALID=1
+        print "Finished"
+        exit 0
+      elif [[ "$RESP2" = "n" ]]; then
+        print "Remember to update unused_wordle_answers.txt."
+        VALID=1
+        exit
+      else
+        print "$RESP2 is an invalid entry."
+      fi
+    done
+
+
+  # If there are only a small number of words, display them
+  elif [[ "$CNT" -le 5 ]]; then
+    print "Just a few words remaining as possible answers:"
+    cat list_"$i".txt
+
+  # Otherwise, review potential answers    
+  else
+
+    VALID=0
+    while [[ "$VALID" -eq 0 ]]; do
+      print -n "See list of remaining words? (y/n)"
+      read -r RESP3
+      if [[ "$RESP3" = "y" ]]; then
+        cat list_"$i".txt
+        VALID=1
+      elif [[ "$RESP3" = "n" ]]; then
+        VALID=1
+      else
+        print "$RESP3 is an invalid entry."
+      fi   
+    done
+
+  fi
+
+  # Analyze remaining words?
+  print -n "Analyze remaining words? (y/n)"
+  read -r RESP4
+  if [[ "$RESP4" = "y" ]]; then
+    . ./wordle_list_analyzer.v0.2
+  fi
+
+  print
+  print "Guesses so far are:"
+  print -l "${GUESS[@]}"
+  print
+
+  # Continue guessing?
+  print -n "Continue with next guess? (y/n)"
+  read -r RESP5
+  if [[ "$RESP5" = "y" ]]; then
+    print "OK"
+  else
+    print "Finished"
+    exit 0
+  fi
+
+#end of main do loop to enter guesses
+done
+
+print "Finished"
+
+exit 0

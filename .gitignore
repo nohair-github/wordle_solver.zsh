@@ -1,0 +1,6 @@
+.DS_Store
+*Release/
+Old*/
+list*.txt
+list.tmp
+letter_list.tmp
