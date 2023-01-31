@@ -145,10 +145,10 @@ for i in {1..6}; do
     read -r RESP1
     LEN="${#RESP1}"
     if [[ "$LEN" -eq 5 ]]; then
-      grep -q "$RESP1" full_valid_guess_list.txt
+      grep -q "$RESP1" valid_guess_list.txt
       if [ $? -ne 0 ]; then
         print "$RESP1 is not a valid guess."
-      
+
       else 
         VALID=1
         if [[ "$VERBOSITY" -ge 1 ]]; then
