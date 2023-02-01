@@ -25,11 +25,13 @@ fi
     if [[ "$RESP11" = "y" ]]; then
       print -n "Enter letter(s) which exactly matched (in any order):"
       read -r CORRECT
-      print "You entered \"$CORRECT\"."
+      if [[ "$VERBOSITY" -eq 2 ]]; then
+        print "You entered \"$CORRECT\"."
+      fi
 
       # Check if any letters in $CORRECT do not appear in GUESS
       if [[ "$VERBOSITY" -eq 2 ]]; then
-      print "Checking for invalid letters in $CORRECT"      
+        print "Checking for invalid letters in $CORRECT"
       fi
       LEN="${#CORRECT}"
       if [[ "$VERBOSITY" -eq 2 ]]; then
@@ -47,10 +49,10 @@ fi
           print "Checking letter $j: \$LETTER is $LETTER"
         fi
         COUNT=$( grep -o "$LETTER" <<<"${GUESS[$i]}" | wc -l )
-        COUNT=${COUNT// }          
+        COUNT=${COUNT// }
         if [[ "$VERBOSITY" -eq 2 ]]; then
           print "Letter $LETTER appears in ${GUESS[$i]} $COUNT times"
-          #print "\$? is $?"         
+          #print "\$? is $?"
         fi
 
         if [[ "$COUNT" -eq 0 ]]; then
@@ -78,7 +80,7 @@ fi
 
   # Find string length of $CORRECT
   LEN="${#CORRECT}"
-  if [[ "$VERBOSITY" -ge 1 ]]; then
+  if [[ "$VERBOSITY" -eq 2  ]]; then
     print "Number of letters exactly matched is $LEN"
     print
   fi
@@ -90,7 +92,7 @@ fi
 
       # First, determine the current letter 
       OFFSET=$(( $j-1 ))
-      
+
       if [[ "$VERBOSITY" -eq 2 ]]; then
         print "\$OFFSET is $OFFSET"
       fi
@@ -154,12 +156,12 @@ fi
           if [[ "$COUNT" -eq 2 ]]; then
             print "$MATCH occurs twice in ${GUESS[i]}"
           fi
-          
+
           if [[ "$COUNT" -eq 3 ]]; then
             print "$MATCH occurs three times in ${GUESS[i]}"
           fi
-            
-          # Find the positions of the occurrences of $MATCH        
+
+          # Find the positions of the occurrences of $MATCH
           k=0
           # Loop through letters in guess to find matches
           for l in {1..5}; do
@@ -208,20 +210,20 @@ fi
 
           done
           # End of loop through letters in guess to find matches
-  
+
         print
 
         fi
 
       print
 
-      if [[ "$VERBOSITY" -ge 1 ]]; then
+      if [[ "$VERBOSITY" -eq 2 ]]; then
         print "Finding words that match pattern $ANSWER"
       fi
 
       # Now select only those words which match pattern
       grep --regexp="$ANSWER" list.tmp > list_$i.txt
-            
+
       # Check for grep errors
       if [[ $? -ne "0" ]]; then
         print -n "Error in grep. Exiting."
@@ -230,23 +232,31 @@ fi
 
 
       # Tabulate and display results after part 1
-      print "After matching for words containing $MATCH in pattern $ANSWER,"
       PART1=$(wc -l < list.tmp)
       PART1=${PART1// }
       CNT=$(wc -l < list_$i.txt)
       CNT=${CNT// }
       DISCARD=$(( $PART1-$CNT ))
-      if [[ "$VERBOSITY" -ge 1 ]]; then
-        print "Part 1 started with $PART1 words out of an initial $TOTAL words."
+      if [[ "$i" -gt 1 ]]; then
+        print "Before solving this guess, $PART1 words remained out of an initial $TOTAL words."
       fi
 
+      print -n "After matching for words containing $MATCH"
+      if [[ "$VERBOSITY" -ne 2 ]]; then
+        print ","
+      fi
+      if [[ "$VERBOSITY" -eq 2 ]]; then
+        print " in pattern $ANSWER,"
+      fi
+
+
       print "$DISCARD words eliminated; $CNT words remaining."
-      if [[ "$VERBOSITY" -ge 1 ]]; then
+      if [[ "$VERBOSITY" -eq 2 ]]; then
         print -n "See list of remaining words? (y/n)"
         read -r RESP6
           if [[ "$RESP6" = "y" ]]; then
             cat list_$i.txt
-          fi  
+          fi
       fi
 
       # Write list_$i.txt to list.tmp for processing in next step
@@ -281,7 +291,7 @@ fi
     done
     # End of loop through matching letters
 
-    if [[ "$VERBOSITY" -ge 1 ]]; then
+    if [[ "$VERBOSITY" -eq 2 ]]; then
       print "Finished checking perfectly matched letters."
     fi
 
@@ -290,7 +300,7 @@ fi
     print
   fi
 
-  if [[ "$VERBOSITY" -ge 1 ]]; then
+  if [[ "$VERBOSITY" -eq 2 ]]; then
     print "Returning execution to wordle_solver.master.dev"
   fi
 

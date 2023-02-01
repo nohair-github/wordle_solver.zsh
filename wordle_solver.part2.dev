@@ -4,7 +4,7 @@
 # developmental version of wordle_solver subscript
 # Wordle solver script by gsb
 
-  if [[ "$VERBOSITY" -ge 1 ]]; then
+  if [[ "$VERBOSITY" -eq 2 ]]; then
     print "wordle_solver.part2.dev"
   fi
   print
@@ -73,8 +73,11 @@
             print "Invalid entry. Letter $LETTER does not appear in ${GUESS[$i]}"
             print "Try again"
             INVALID=1
+
           else
-            print "$LETTER is valid"
+            if [[ "$VERBOSITY" -eq 2 ]]; then
+              print "$LETTER is valid"
+            fi
 
           fi
 
@@ -86,9 +89,13 @@
           print "Invalid letter in $LET. Try again"
           print
           VALID=0
+
         else
-          print "Letters $LET are all valid"
           VALID=1
+          if [[ "$VERBOSITY" -eq 2 ]]; then
+            print "Letters $LET are all valid"
+          fi
+
         fi
 
       fi
@@ -143,7 +150,7 @@
       CNT=$(wc -l < list_$i.txt)
       CNT=${CNT// }
       DISCARD=$(( $PREV-$CNT ))
-      print "Preliminary enumeration of all remaining words containing $CHOICE:"
+      print "Preliminary selection of remaining words containing $CHOICE:"
       print "$DISCARD further words eliminated; $CNT words remaining."
     fi
 
@@ -165,8 +172,12 @@
     fi
 
     if [[ ${GUESS[$i][$l]} = $CHOICE ]]; then  # if loop through letters in GUESS
-      if [[ "$VERBOSITY" -ge 1 ]]; then
+      if [[ "$VERBOSITY" -eq 2 ]]; then
         print "$CHOICE is found in position $l of guess"
+      fi
+
+      if [[ "$VERBOSITY" -ge 1 ]]; then
+        print "Finding words with $CHOICE NOT in position $l:"
       fi
 
       # Check if $CHOICE is already in $ANSWER in that position
@@ -181,11 +192,9 @@
         fi
         print
 
-## new addition
-
       # Check if only one occurrence of CHOICE in GUESS
       elif [[ $COUNT -eq 1 ]]; then
-        if [[ "$VERBOSITY" -ge 1 ]]; then
+        if [[ "$VERBOSITY" -eq 2 ]]; then
           print "Letter $CHOICE appears in ${GUESS[i]} only once"
         fi
 
@@ -204,15 +213,13 @@
         grep --regexp="$PATTERN" list.tmp > list_$i.txt
 
         # Check for grep errors
-        if [[ $? -ne "0" ]]; then 
+        if [[ $? -ne "0" ]]; then
           print "Error in grep."
           print "Likely there were no matches to the pattern."
           print "PATTERN might be in error."
           print "Exiting."
           exit 9
         fi
-
-##
 
       else
         print -n "Is this occurrence of $CHOICE a partial match (yellow square)? (y/n)"
@@ -257,10 +264,8 @@
     done  # End of outer do loop through letters in guess to find matches
 
     # Tabulate and display results
-    if [[ "$VERBOSITY" -ge 1 ]]; then
-      PREV=$(wc -l < list.tmp)
-      PREV=${PREV// }
-    fi
+    PREV=$(wc -l < list.tmp)
+    PREV=${PREV// }
     CNT=$(wc -l < list_$i.txt)
     CNT=${CNT// }
     DISCARD=$(( $PREV-$CNT ))
@@ -268,7 +273,7 @@
       print -n "After solving for $CHOICE, "
     fi
     print "$DISCARD further words eliminated; $CNT words remaining."
-    if [[ "$VERBOSITY" -ge 1 ]]; then
+    if [[ "$VERBOSITY" -eq 2 ]]; then
       print -n "See list of remaining words? (y/n)"
       read -r RESP9
       if [[ "$RESP9" = "y" ]]; then
@@ -296,6 +301,7 @@
       exit 0
     fi
 
+    print
 
   # Finished looping through $LET
   done
@@ -306,14 +312,16 @@
     CNT=${CNT// }
     DISCARD=$(( $PART2-$CNT ))
     print "Result of Part 2: $PART2 initial words, $DISCARD words eliminated, $CNT words remaining."
-    print -n "See list of remaining words? (y/n)"
-    read -r RESP9
-    if [[ "$RESP9" = "y" ]]; then
-      cat list_$i.txt
+    if [[ "$VERBOSITY" -eq 2 ]]; then
+      print -n "See list of remaining words? (y/n)"
+      read -r RESP9
+      if [[ "$RESP9" = "y" ]]; then
+        cat list_$i.txt
+      fi
     fi
   fi
 
-  if [[ "$VERBOSITY" -ge 1 ]]; then
+  if [[ "$VERBOSITY" -eq 2 ]]; then
     print "Returning execution to wordle_solver.master.dev"
   fi
 

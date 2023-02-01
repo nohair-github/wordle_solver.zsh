@@ -8,7 +8,7 @@ print "\$ANSWER is $ANSWER"
 # Remove corrected_unused_wordle_answers.txt if exists
 if [[ -e corrected_unused_wordle_answers.txt ]]
 then
-  if [[ "$VERBOSITY" -ge 1 ]]; then
+  if [[ "$VERBOSITY" -eq 2 ]]; then
     print "corrected_unused_wordle_answers.text exists ... deleting"
   fi
   rm corrected_unused_wordle_answers.txt

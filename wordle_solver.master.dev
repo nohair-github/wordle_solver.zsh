@@ -8,7 +8,7 @@
 # and zsh (zsh 5.8.1 (x86_64-apple-darwin21.0)
 
 print
-print "Wordle Solver"
+print "Wordle Solver (dev version)"
 
 # Version 0.01 (11/20/22): getting script to function, including lots of diagnostic
 # and debug messages.
@@ -159,7 +159,7 @@ for i in {1..6}; do
 
     else
       print "Guess must be 5 letters."
- 
+
     fi
 
   # end do loop to check guess validity
@@ -167,7 +167,7 @@ for i in {1..6}; do
 
   # Check that we exited the input loop because $RESP1 was valid (i.e. VALID=1)
   # and not because read had an error (e.g., the user pressed Ctrl-D)
-  
+
   if [[ "$VALID" -eq 0 ]]; then
     echo >&2 "There was an error in input."
     exit 1
@@ -184,12 +184,14 @@ for i in {1..6}; do
 
   # Call subscript part 1: Select words in list which contain perfectly matched letters in the proper position.
 
-  if [[ "$VERBOSITY" -ge 1 ]]; then
+  if [[ "$VERBOSITY" -eq 2 ]]; then
     print "calling subscript wordle_solver.part1.dev"
     print
   fi
 
   . ./wordle_solver.part1.dev
+
+  print
 
   if [[ "$VERBOSITY" -eq 2 ]]; then
     print "execution returned to main script"
@@ -199,13 +201,12 @@ for i in {1..6}; do
   # Call subscript part 2: Select woords which contain partially matched letters and sliminate words
   # which contain partially matched letters in the wrong position.
 
-  if [[ "$VERBOSITY" -ge 1 ]]; then
+  if [[ "$VERBOSITY" -eq 2 ]]; then
     print "calling subscript wordle_solver.part2.dev"
     print
   fi
 
   . ./wordle_solver.part2.dev
-
   print
 
   if [[ "$VERBOSITY" -eq 2 ]]; then
@@ -221,10 +222,9 @@ for i in {1..6}; do
   fi
 
   . ./wordle_solver.part3.dev
-
   print
 
-  if [[ "$VERBOSITY" -ge 1 ]]; then
+  if [[ "$VERBOSITY" -eq 2 ]]; then
     print "execution returned to main script"
     print
   fi
@@ -293,6 +293,7 @@ for i in {1..6}; do
   fi
 
   # Analyze remaining words?
+  print
   print -n "Analyze remaining words? (y/n)"
   read -r RESP4
   if [[ "$RESP4" = "y" ]]; then

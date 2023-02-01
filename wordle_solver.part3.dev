@@ -3,10 +3,10 @@
 # wordle_solver.part3.dev
 # Wordle solver subscript by gsb
 
-  if [[ "$VERBOSITY" -ge 1 ]]; then
+  if [[ "$VERBOSITY" -eq 2 ]]; then
     print "wordle_solver.part3.dev"
-    print
   fi
+  print
 
   # Determine unmatched letters in guess
   WRONG=$( echo "${GUESS[$i]}" | tr -d "$LET" | tr -d "$CORRECT" )
@@ -64,7 +64,7 @@
         exit
 
       else
-        if [[ "$VERBOSITY" -ge 1 ]]; then
+        if [[ "$VERBOSITY" -eq 2 ]]; then
           print "Letter $LETTER appears in ${GUESS[i]} $COUNT times"
         fi
 
@@ -83,17 +83,20 @@
         grep --regexp="$TEMPLATE" list.tmp > list_$i.txt
 
         # Tabulate and display results after matching for TEMPLATE
-        PREV=$(wc -l < list.tmp)
-        PREV=${PREV// }
-        CNT=$(wc -l < list_$i.txt)
-        CNT=${CNT// }
-        DISCARD=$(( $PREV-$CNT ))
-        print "After excluding words with $LETTER, $DISCARD further words eliminated; $CNT words remaining."
         if [[ "$VERBOSITY" -ge 1 ]]; then
-          print -n "See list of remaining words? (y/n)"
-          read -r RESP3
-          if [[ "$RESP3" = "y" ]]; then
-            cat list_$i.txt
+          PREV=$(wc -l < list.tmp)
+          PREV=${PREV// }
+          CNT=$(wc -l < list_$i.txt)
+          CNT=${CNT// }
+          DISCARD=$(( $PREV-$CNT ))
+          print "After excluding words containing $LETTER, $DISCARD further words eliminated; $CNT words remaining."
+          print
+          if [[ "$VERBOSITY" -eq 2 ]]; then
+            print -n "See list of remaining words? (y/n)"
+            read -r RESP3
+            if [[ "$RESP3" = "y" ]]; then
+              cat list_$i.txt
+            fi
           fi
         fi
 
@@ -124,24 +127,23 @@
 
   fi
 
-  # Tabulate and display results after step 3
-  CNT=$(wc -l < list_$i.txt)
-  CNT=${CNT// }
-  DISCARD=$(( $PART3-$CNT ))
-  print
-  print "After step 3, $DISCARD further words eliminated; $CNT words remaining."
-  if [[ "$VERBOSITY" -ge 1 ]]; then
-    print -n "See list of remaining words? (y/n)"
-    read -r RESP3
-    if [[ "$RESP3" = "y" ]]; then
-      cat list_$i.txt
+  # Tabulate and display results after part 3
+    CNT=$(wc -l < list_$i.txt)
+    CNT=${CNT// }
+    DISCARD=$(( $PART3-$CNT ))
+    print "After excluding words with the letter(s) \"$WRONG\", $DISCARD further words eliminated; $CNT words remaining."
+    if [[ "$VERBOSITY" -eq 2 ]]; then
+      print -n "See list of remaining words? (y/n)"
+      read -r RESP3
+      if [[ "$RESP3" = "y" ]]; then
+        cat list_$i.txt
+      fi
     fi
-  fi
-  
+
   # Update list.tmp
   cat list_$i.txt > list.tmp
 
-  if [[ "$VERBOSITY" -ge 1 ]]; then
+  if [[ "$VERBOSITY" -eq 2 ]]; then
     print "Returning execution to wordle_solver.master.dev"
   fi
 

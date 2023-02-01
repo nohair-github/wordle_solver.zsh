@@ -25,16 +25,19 @@ fi
   if [[ -e list_$i.txt ]]
     then
     print
-    print "Wordle word list analyzer"
-    print
+    if [[ "$VERBOSITY" -ge 1 ]]; then
+      print "Wordle word list analyzer"
+      print
+    fi
     COUNT=$(wc -l < list_$i.txt)
     COUNT=${COUNT// }
-    print "Current answer list (list_$i.txt) contains $COUNT words"
-    print -n "Display list? (y/n):"
-    read -r RESP0
-    if [[ $RESP0 = "y" ]]
-      then
-      cat list_$i.txt
+    print "Answer list not excluding previously used answers (list_$i.txt) contains $COUNT words"
+    if [[ "$VERBOSITY" -ge 1 ]]; then
+      print -n "Display list? (y/n):"
+      read -r RESP0
+      if [[ $RESP0 = "y" ]]; then
+        cat list_$i.txt
+      fi
     fi
   else
     print "list_$1.txt not found. - Exiting"
@@ -58,7 +61,7 @@ fi
     CNT=$(grep "$letter" abridged_wordle_answer_list.txt | uniq | wc -l)
     CNT=${CNT// }
     if  [[ $CNT -ge 1 ]]; then
-      fletter="${CNT} $letter"
+      fletter="   ${CNT} $letter"
       echo $fletter >> letter_list.tmp
     fi
   done
@@ -70,30 +73,37 @@ fi
   print "which appear in ~50% of the words."
   print
 
-  # Tabulate letter frequency in those positions where no exact match has been found
+  print -n "See letter frequency by letter position in guess? (y/n)"
+  read -r RESP
+  if [[ $RESP = "y" ]]; then
+    # Tabulate letter frequency in those positions where no exact match has been found
+    print
+    print "So far, \$ANSWER is $ANSWER"
+
+    # Find which positions $ANSWER lacks identified letter
+
+    for n in {0..4}; do
+      POSITION=$(( n+1 ))
+      #print "The letter at position $POSITION in \$ANSWER is ${ANSWER:$n:1}"
+      if [[ ${ANSWER:$n:1} = "." ]]; then
+        print
+        if [[ "$VERBOSITY" -ge 1 ]]; then
+          print "No previously guessed letter in position $POSITION."
+        fi
+        # now tabulate the letters in that position in word list,
+        # count the frequency, and display
+        POSSIBLE[$POSITION]=$(cut -c $POSITION abridged_wordle_answer_list.txt | sort | uniq -c | sort -nr)
+        print "Frequency of letters in position $POSITION in remaining possible answers:"
+        print $POSSIBLE[$POSITION]
+
+      else
+        print
+        print "The letter in position $POSITION is ${ANSWER:$n:1}"
+      fi
+    done
+
+  fi
   print
-  print "So far, \$ANSWER is $ANSWER"
-
-  # Find which positions $ANSWER lacks identified letter
-
-  for n in {0..4}; do
-    POSITION=$(( n+1 ))
-    #print "The letter at position $POSITION in \$ANSWER is ${ANSWER:$n:1}"
-    if [[ ${ANSWER:$n:1} = "." ]]; then
-      print
-      print "No previously guessed letter in position $POSITION."
-      # now tabulate the letters in that position in word list,
-      # count the frequency, and display
-      POSSIBLE[$POSITION]=$(cut -c $POSITION abridged_wordle_answer_list.txt | sort | uniq -c | sort -nr)
-      print "Frequency of letters in position $POSITION in remaining possible answers:"
-      print $POSSIBLE[$POSITION]
-
-    else
-      print
-      print "The letter in position $POSITION is ${ANSWER:$n:1}"
-    fi
-  done
-
   print -n "Display abridged answer list? (y/n):"
   read -r RESP1
   if [[ $RESP1 = "y" ]]; then
@@ -110,7 +120,7 @@ fi
   fi
 
 
-  if [[ "$VERBOSITY" -ge 1 ]]; then
+  if [[ "$VERBOSITY" -eq 2 ]]; then
     print "Returning execution to wordle_solver.master.dev"
   fi
 
