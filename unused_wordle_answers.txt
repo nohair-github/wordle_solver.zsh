@@ -1280,7 +1280,6 @@ shell
 shied
 shift
 shiny
-shirk
 shirt
 shoal
 shone
