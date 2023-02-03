@@ -5,6 +5,23 @@
 
 print "\$ANSWER is $ANSWER"
 
+# Add ANSWER to past_wordle_answers.txt
+lines=$(wc -l < past_wordle_answers.txt)
+print "past_wordle_answers.txt contains $lines answers"
+print "Adding $NEW_ANSWER to past_wordle_answers.txt"
+echo $NEW_ANSWER >> past_wordle_answers.txt
+
+# Sort past_wordle_answers.txt alphabetically
+sort past_wordle_answers.txt > past_wordle_answers.tmp
+cp past_wordle_answers.tmp past_wordle_answers.txt
+
+# Display new count of past_wordle_answers.txt
+lines=$(wc -l < past_wordle_answers.txt)
+print "past_wordle_answers.txt now contains $lines answers"
+
+#Back up list of past wordle answers
+mv past_wordle_answers.tmp past_wordle_answers.txt.bak
+
 # Remove corrected_unused_wordle_answers.txt if exists
 if [[ -e corrected_unused_wordle_answers.txt ]]
 then

@@ -190,8 +190,6 @@ fi
                 read -r RESP
                 if [[ "$RESP" = "y" ]]; then
                   # Add letter to $ANSWER
-                  print "would add letter to answer here"
-
                   ANSWER="${ANSWER:0:$(($l-1))}""$MATCH""${ANSWER:$l}"
                   if [[ "$VERBOSITY" -ge 1 ]]; then
                     print "\$ANSWER is now $ANSWER"
@@ -230,6 +228,27 @@ fi
         exit 6
       fi
 
+      # If hard mode is enabled, use ANSWER to prune current_valid_guess_list.tmp
+      if [[ "$HARD" -eq 1 ]]; then
+        print "Removing valid guesses which do not match ANSWER"
+        grep --regexp="$ANSWER" current_valid_guess_list.tmp > corrected_guess_list.tmp
+
+        # Check for grep errors
+        if [[ $? -ne "0" ]]; then
+          print -n "Error in grep of current_valid_guess_list.tmp. Exiting."
+          exit 6
+        fi
+
+        # Display result for debug
+        if [[ "$VERBOSITY" -eq 2 ]]; then
+          CURRENT=$(wc -l < current_valid_guess_list.tmp)
+          CURRENT=${CURRENT// }
+          CNT=$(wc -l < corrected_guess_list.tmp)
+          CNT=${CNT// }
+          print "$CURRENT valid guesses reduced to $CNT valid quesses in part 1"
+        fi
+        cat corrected_guess_list.tmp > current_valid_guess_list.tmp
+      fi
 
       # Tabulate and display results after part 1
       PART1=$(wc -l < list.tmp)

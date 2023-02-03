@@ -13,7 +13,8 @@
 # Added so far in this version: proper handling of variables passed from main, list total letter frequency
 # of list of remaining answers, not just by position, changed analysis to be based on unused answers
 
-# To be added: change y/n questions not to exit on invalid entry, ...
+# To be added: change y/n questions not to exit on invalid entry, handling of current_valid_guess_list.tmp in hard mode,
+# tbd
 
 # Clear tmp files
 if [[ -e letter_list.tmp ]]; then
@@ -103,12 +104,47 @@ fi
     done
 
   fi
+
   print
   print -n "Display abridged answer list? (y/n):"
   read -r RESP1
   if [[ $RESP1 = "y" ]]; then
     print
     cat abridged_wordle_answer_list.txt
+  fi
+
+  if [[ "$HARD" -eq 1 ]]; then
+    COUNT=$(wc -l < current_valid_guess_list.tmp)
+    COUNT=${COUNT// }
+    print
+    print "Current valid guess list contains $COUNT words"
+    print -n "Display current valid guesses? (y/n):"
+    read -r RESP
+    if [[ "$RESP" = "y" ]]; then
+      print
+      cat current_valid_guess_list.tmp
+    fi
+
+    print
+    print -n "Display current valid guesses minus previously used answers? (y/n):"
+    read -r RESP
+    if [[ "$RESP" = "y" ]]; then
+      # Create a limited set of possible guesses based on unused_wordle_answers.txt
+      grep -f current_valid_guess_list.tmp unused_wordle_answers.txt  > abridged_wordle_guess_list.tmp
+      print
+      COUNT=$(wc -l < abridged_wordle_guess_list.tmp)
+      COUNT=${COUNT// }
+      print "Abridged guess list (excluding previously used wordle answers) contains $COUNT words"
+      print
+        print -n "Display abridged valid guess list? (y/n):"
+        read -r RESP1
+        if [[ "$RESP1" = "y" ]]; then
+          print
+          cat abridged_wordle_guess_list.tmp
+        fi
+
+    fi
+
   fi
 
   print

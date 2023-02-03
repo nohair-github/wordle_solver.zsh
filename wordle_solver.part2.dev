@@ -143,6 +143,28 @@
     # First find all the words which contain $CHOICE in any position
     grep --regexp="[$CHOICE]" list.tmp > list_$i.txt
 
+    # If hard mode is enabled, find words in current_valid_guess_list.tmp which contain $CHOICE
+    if [[ "$HARD" -eq 1 ]]; then
+      grep --regexp="[$CHOICE]" current_valid_guess_list.tmp > corrected_guess_list.tmp
+
+      # Check for grep errors
+      if [[ $? -ne "0" ]]; then
+        print "Error in grep of current_valid_guess_list.tmp line 148."
+        print "Exiting."
+        exit 1
+      fi
+
+      # Display result for debug
+      if [[ "$VERBOSITY" -eq 2 ]]; then
+        CURRENT=$(wc -l < current_valid_guess_list.tmp)
+        CURRENT=${CURRENT// }
+        CNT=$(wc -l < corrected_guess_list.tmp)
+        CNT=${CNT// }
+        print "$CURRENT current valid guesses reduced to $CNT valid quesses in this step"
+      fi
+      cat corrected_guess_list.tmp > current_valid_guess_list.tmp
+    fi
+
     # Tabulate and display results
     PREV=$(wc -l < list.tmp)
     PREV=${PREV// }
@@ -221,6 +243,29 @@
           exit 9
         fi
 
+        # Now select words in corrected_guess_list.tmp which match pattern
+        if [[ "$HARD" -eq 1 ]];then
+          grep --regexp="$PATTERN" current_valid_guess_list.tmp > corrected_guess_list.tmp
+
+          # Check for grep errors
+          if [[ $? -ne "0" ]]; then
+            print "Error in grep of corrected_guess_list.tmp line 248"
+            print "Exiting."
+            exit 1
+          fi
+
+          # Display result for debug
+          if [[ "$VERBOSITY" -eq 2 ]]; then
+            CURRENT=$(wc -l < current_valid_guess_list.tmp)
+            CURRENT=${CURRENT// }
+            CNT=$(wc -l < corrected_guess_list.tmp)
+            CNT=${CNT// }
+            print "$CURRENT current valid guesses reduced to $CNT valid quesses in this step"
+          fi
+          cat corrected_guess_list.tmp > current_valid_guess_list.tmp
+        fi
+
+
       else
         print -n "Is this occurrence of $CHOICE a partial match (yellow square)? (y/n)"
         read -r RESP
@@ -248,6 +293,29 @@
             print "Exiting."
             exit 9
           fi
+
+          # If hard mode enabled, select words in corrected_guess_list.tmp which match pattern
+          if [[ "$HARD" -eq 1 ]]; then
+            grep --regexp="$PATTERN" current_valid_guess_list.tmp > corrected_guess_list.tmp
+
+            # Check for grep errors
+            if [[ $? -ne "0" ]]; then
+              print "Error in grep of corrected_guess_list.tmp lien 299."
+              print "Exiting."
+              exit 1
+            fi
+
+            # Display result for debug
+            if [[ "$VERBOSITY" -eq 2 ]]; then
+              CURRENT=$(wc -l < current_valid_guess_list.tmp)
+              CURRENT=${CURRENT// }
+              CNT=$(wc -l < corrected_guess_list.tmp)
+              CNT=${CNT// }
+              print "$CURRENT current valid guesses reduced to $CNT valid quesses in this step"
+            fi
+            cat corrected_guess_list.tmp > current_valid_guess_list.tmp
+          fi
+
 
         elif [[ "$RESP" = "n" ]]; then
                   print "Not an exact or partial match - will deal with in part 3"

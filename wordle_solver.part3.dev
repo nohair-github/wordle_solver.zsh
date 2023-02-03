@@ -82,6 +82,31 @@
         fi
         grep --regexp="$TEMPLATE" list.tmp > list_$i.txt
 
+        # If hard mode, repeat selection on current_valid_guess_list.tmp
+        if [[ "$HARD" -eq 1 ]]; then
+          grep --regexp="$TEMPLATE" current_valid_guess_list.tmp > corrected_guess_list.tmp
+
+          # Check for grep errors
+          if [[ $? -ne "0" ]]; then
+            print "Error in grep of corrected_guess_list.tmp line 87"
+            print "Exiting."
+            exit 1
+          fi
+
+          # Display result for debug
+          if [[ "$VERBOSITY" -eq 2 ]]; then
+            CURRENT=$(wc -l < current_valid_guess_list.tmp)
+            CURRENT=${CURRENT// }
+            CNT=$(wc -l < corrected_guess_list.tmp)
+            CNT=${CNT// }
+            print "$CURRENT current valid guesses reduced to $CNT valid quesses in this step"
+          fi
+          cat corrected_guess_list.tmp > current_valid_guess_list.tmp
+        fi
+
+
+
+
         # Tabulate and display results after matching for TEMPLATE
         if [[ "$VERBOSITY" -ge 1 ]]; then
           PREV=$(wc -l < list.tmp)
