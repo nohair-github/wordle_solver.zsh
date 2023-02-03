@@ -46,20 +46,20 @@ fi
   fi
 
 # Create a more limited set of possible answers based on unused_wordle_answers.txt
-  grep -f list_$i.txt unused_wordle_answers.txt > abridged_wordle_answer_list.txt
+  grep -f list_$i.txt unused_wordle_answers.txt > abridged_wordle_answer_list.tmp
   print
-  COUNT=$(wc -l < abridged_wordle_answer_list.txt)
+  COUNT=$(wc -l < abridged_wordle_answer_list.tmp)
   COUNT=${COUNT// }
   print "Answer list based on unused wordle answers contains $COUNT words"
 
   # Calculate total letter frequency of all words in  abridged answer list
   print
   print "Combined letter frequency of all words in abridged_wordle_answer_list.txt:"
-  grep -o . abridged_wordle_answer_list.txt | sort -f | uniq -ic | sort -nr
+  grep -o . abridged_wordle_answer_list.tmp | sort -f | uniq -ic | sort -nr
 
   # Find the number of words containing each individual letter
   for letter in {a..z}; do
-    CNT=$(grep "$letter" abridged_wordle_answer_list.txt | uniq | wc -l)
+    CNT=$(grep "$letter" abridged_wordle_answer_list.tmp | uniq | wc -l)
     CNT=${CNT// }
     if  [[ $CNT -ge 1 ]]; then
       fletter="   ${CNT} $letter"
@@ -93,7 +93,7 @@ fi
         fi
         # now tabulate the letters in that position in word list,
         # count the frequency, and display
-        POSSIBLE[$POSITION]=$(cut -c $POSITION abridged_wordle_answer_list.txt | sort | uniq -c | sort -nr)
+        POSSIBLE[$POSITION]=$(cut -c $POSITION abridged_wordle_answer_list.tmp | sort | uniq -c | sort -nr)
         print "Frequency of letters in position $POSITION in remaining possible answers:"
         print $POSSIBLE[$POSITION]
 
@@ -110,7 +110,7 @@ fi
   read -r RESP1
   if [[ $RESP1 = "y" ]]; then
     print
-    cat abridged_wordle_answer_list.txt
+    cat abridged_wordle_answer_list.tmp
   fi
 
   if [[ "$HARD" -eq 1 ]]; then
@@ -130,7 +130,7 @@ fi
     read -r RESP
     if [[ "$RESP" = "y" ]]; then
       # Create a limited set of possible guesses based on unused_wordle_answers.txt
-      grep -f current_valid_guess_list.tmp unused_wordle_answers.txt  > abridged_wordle_guess_list.tmp
+      grep -v -f past_wordle_answers.txt current_valid_guess_list.tmp  > abridged_wordle_guess_list.tmp
       print
       COUNT=$(wc -l < abridged_wordle_guess_list.tmp)
       COUNT=${COUNT// }
@@ -153,6 +153,10 @@ fi
   # Remove tmp files
   if [[ -e letter_list.tmp ]]; then
     rm letter_list.tmp
+  fi
+
+  if [[ -e abridged_wordle_guess_list.tmp ]]; then
+    rm abridged_wordle_guess_list.tmp
   fi
 
 

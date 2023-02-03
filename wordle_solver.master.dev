@@ -122,8 +122,10 @@ fi
 # Define array of guessed words
 declare -a GUESS
 
-# Create list and tmp files
+# Clear tmp files
+rm *.tmp
 
+# Create list files
 if [[ -e list.tmp ]]; then
   rm list.tmp
 fi
@@ -338,17 +340,7 @@ for i in {1..6}; do
 done
 
 # Clear tmp files
-if [[ -e list.tmp ]]; then
-  rm list.tmp
-fi
-
-if [[ -e current_valid_guess_list.tmp ]]; then
- rm current_valid_guess_list.tmp
-fi
-
-if [[ -e corrected_guess_list.tmp ]]; then
- rm corrected_guess_list.tmp
-fi
+rm *.tmp
 
 print "Finished"
 
