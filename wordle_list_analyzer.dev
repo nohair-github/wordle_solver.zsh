@@ -54,7 +54,7 @@ fi
 
   # Calculate total letter frequency of all words in  abridged answer list
   print
-  print "Combined letter frequency of all words in abridged_wordle_answer_list.txt:"
+  print "Combined letter frequency of all words in abridged_wordle_answer_list.tmp:"
   grep -o . abridged_wordle_answer_list.tmp | sort -f | uniq -ic | sort -nr
 
   # Find the number of words containing each individual letter
@@ -129,7 +129,7 @@ fi
     print -n "Display current valid guesses minus previously used answers? (y/n):"
     read -r RESP
     if [[ "$RESP" = "y" ]]; then
-      # Create a limited set of possible guesses based on unused_wordle_answers.txt
+      # Create a limited set of possible guesses based on unused_wordle_answers.tmp
       grep -v -f past_wordle_answers.txt current_valid_guess_list.tmp  > abridged_wordle_guess_list.tmp
       print
       COUNT=$(wc -l < abridged_wordle_guess_list.tmp)
