@@ -6,10 +6,16 @@
 print "\$ANSWER is $ANSWER"
 
 # Add ANSWER to past_wordle_answers.txt
+grep -q $ANSWER past_wordle_answers.txt
+if [[ $? -eq 0 ]]; then
+  print "$ANSWER is already in past_wordle_answers.txt"
+  return
+fi
+
 lines=$(wc -l < past_wordle_answers.txt)
 print "past_wordle_answers.txt contains $lines answers"
-print "Adding $NEW_ANSWER to past_wordle_answers.txt"
-echo $NEW_ANSWER >> past_wordle_answers.txt
+print "Adding $ANSWER to past_wordle_answers.txt"
+echo $ANSWER >> past_wordle_answers.txt
 
 # Sort past_wordle_answers.txt alphabetically
 sort past_wordle_answers.txt > past_wordle_answers.tmp

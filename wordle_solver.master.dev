@@ -1,56 +1,19 @@
-
 #!/bin/zsh
 
 # wordle_solver.master.dev
 # developmental version of wordle_solver script
 # Wordle solver script by gsb
 
-# Developed on macos 12.6.2 (21.6.0 Darwin Kernel Version 21.6.0: root:xnu-8020.240.7~1/RELEASE_X86_64)      
+# Developed on macos 12.6.2 (21.6.0 Darwin Kernel Version 21.6.0: root:xnu-8020.240.7~1/RELEASE_X86_64)
 # and zsh (zsh 5.8.1 (x86_64-apple-darwin21.0)
 
 print
 print "Wordle Solver (dev version)"
 
-# Version 0.01 (11/20/22): getting script to function, including lots of diagnostic
-# and debug messages.
+# See version_history.txt
 
-# Version 0.02 (11/23/22): Less debug and extraneous messages, more informative messaging, corrected
-# formatting, correcting and improving logic, correcting regexs, changing variable names to all caps.
-
-# Version 0.03 (11/24/22): Added basic analysis subroutine, added more error trapping,
-# edited messages to be more informative, somewhat less debug and extraneous messages, more informative,
-# improving logic.
-
-# Version 0.031: last unitary script.
-
-# Version 0.04 (12/23/22): Split matching steps into subprograms, re-ordered matching logic and sequence,
-# added logic to deal with duplicate letters in guesses and answers, initial input loop changes to allow typos,
-# incorporation of Wordle's allowed guesses list
-
-# Version 0.1 (1/14/23): Added since v0.04:
-# list-$i.txt copied to $ANSWER if one solution left,
-# link changed to update_unused_wordle_answers.txt.zsh,
-# corrected references to list_$i.txt and list.tmp so they are updated when exiting subroutine,
-# addition of verbosity switches in some locations,
-# checking validity of response and trap errors,
-# change y/n input loops where appropriate to handle invalid answers without exiting,
-# better analysis after each guess to include total letter frequency not just by position (analyzer subroutine),
-# incorporation of list of unused answers reducing universe of possibles (analyzer subroutine),
-# bug fixes, improved handling of words with duplicate letters,
-# added option flags for -v --verbose, and -q --quiet,
-# improved logic and algoritm to eliminate unmatched letters.
-
-# Version 0.2 (2/27/23): Added since v0.1 -
-# began supporting --debug flag and altering --verbose switches, fixed handling of null input in part 2 script,
-# fixed handling of duplicate letters in part2, changed part 3 script to automatically select unmatched letters,
-# continued standardization of ['s to [['s and variable quoting inside brackets, changed wordle_list_analyzer
-# to display data based on unused answer list, fixed input loop on part2 to handle invalid answers,
-# link changed to update_unused_wordle_answers.v0.2, further bug fixes
-
-# To be done: module to suggest guesses, further bug fixes, complete and debug testing user input for validity
-# in parts 1 and 2, fix additional input loops to handle erroneous inout without exit, better tabulation of progress,
-# add additional verbose and debug verbosity switches, standardize ['s to [['s, and more tbd
-
+# Clear tmp files
+rm *.tmp
 
 VERBOSITY=0
 
@@ -122,9 +85,6 @@ fi
 # Define array of guessed words
 declare -a GUESS
 
-# Clear tmp files
-rm *.tmp
-
 # Create list files
 if [[ -e list.tmp ]]; then
   rm list.tmp
@@ -174,7 +134,13 @@ for i in {1..6}; do
       else 
         VALID=1
         if [[ "$VERBOSITY" -ge 1 ]]; then
-          print "$RESP1 is found in the current valid guess list"
+          if [[ "$HARD" -eq 1 ]]; then
+            print "$RESP1 is found in the current valid guess list (hard mode)"
+          else
+            print "$RESP1 is in the valid guess list"
+          fi
+        else
+          print "$RESP1 is a valid guess"
         fi
       fi
 
@@ -277,11 +243,16 @@ for i in {1..6}; do
       if [[ "$RESP2" = "y" ]]; then
         . ./update_unused_wordle_answers.dev
         VALID=1
+        # Clear tmp files
+        rm *.tmp
         print "Finished"
-        exit 0
+        exit
       elif [[ "$RESP2" = "n" ]]; then
         print "Remember to update unused_wordle_answers.txt."
         VALID=1
+        # Clear tmp files
+        rm *.tmp
+        print "Finished"
         exit
       else
         print "$RESP2 is an invalid entry."
