@@ -13,7 +13,9 @@ print "Wordle Solver (dev version)"
 # See version_history.txt
 
 # Clear tmp files
-rm *.tmp
+if [[ -e *.tmp ]]; then
+  rm *.tmp
+fi
 
 VERBOSITY=0
 

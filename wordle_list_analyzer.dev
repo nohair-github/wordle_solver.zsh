@@ -22,39 +22,57 @@ if [[ -e letter_list.tmp ]]; then
   touch letter_list.tmp
 fi
 
+if [[ -e abridged_wordle_guess_list.tmp ]]; then
+  rm abridged_wordle_guess_list.tmp
+  touch abridged_wordle_guess_list.tmp
+fi
+
+if [[ -e abridged_wordle_answer_list.tmp ]]; then
+  rm abridged_wordle_answer_list.tmp
+  touch abridged_wordle_answer_list.tmp
+fi
+
 # Check if input file exists
-  if [[ -e list_$i.txt ]]
-    then
+if [[ -e list_$i.txt ]]; then
+  print
+  if [[ "$VERBOSITY" -ge 1 ]]; then
+    print "Wordle word list analyzer"
     print
-    if [[ "$VERBOSITY" -ge 1 ]]; then
-      print "Wordle word list analyzer"
-      print
-    fi
-    COUNT=$(wc -l < list_$i.txt)
-    COUNT=${COUNT// }
-    print "Answer list not excluding previously used answers (list_$i.txt) contains $COUNT words"
-    if [[ "$VERBOSITY" -ge 1 ]]; then
-      print -n "Display list? (y/n):"
-      read -r RESP0
-      if [[ $RESP0 = "y" ]]; then
-        cat list_$i.txt
-      fi
-    fi
-  else
-    print "list_$1.txt not found. - Exiting"
-    exit 1
   fi
+  COUNT=$(wc -l < list_$i.txt)
+  COUNT=${COUNT// }
+  print "Answer list not excluding previously used answers (list_$i.txt) contains $COUNT words"
+  if [[ "$VERBOSITY" -ge 1 ]]; then
+    print -n "Display list? (y/n):"
+    read -r RESP0
+    if [[ $RESP0 = "y" ]]; then
+      cat list_$i.txt
+    fi
+  fi
+else
+  print "list_$1.txt not found. - Exiting"
+  exit 1
+fi
 
 # Create a more limited set of possible answers based on unused_wordle_answers.txt
-  grep -f list_$i.txt unused_wordle_answers.txt > abridged_wordle_answer_list.tmp
+grep -f list_$i.txt unused_wordle_answers.txt > abridged_wordle_answer_list.tmp
+print
+COUNT=$(wc -l < abridged_wordle_answer_list.tmp)
+COUNT=${COUNT// }
+print "Answer list based on unused wordle answers contains $COUNT words"
+print
+print -n "Display abridged answer list? (y/n):"
+read -r RESP1
+if [[ $RESP1 = "y" ]]; then
   print
-  COUNT=$(wc -l < abridged_wordle_answer_list.tmp)
-  COUNT=${COUNT// }
-  print "Answer list based on unused wordle answers contains $COUNT words"
+  cat abridged_wordle_answer_list.tmp
+fi
 
-  # Calculate total letter frequency of all words in  abridged answer list
-  print
-  print "Combined letter frequency of all words in abridged_wordle_answer_list.tmp:"
+# Calculate total letter frequency of all words in abridged answer list
+print
+print -n "Print letter frequency in all words in abridged answer list? (y/n)"
+read -r RESP
+if [[ "$RESP" = "y" ]]; then
   grep -o . abridged_wordle_answer_list.tmp | sort -f | uniq -ic | sort -nr
 
   # Find the number of words containing each individual letter
@@ -66,6 +84,7 @@ fi
       echo $fletter >> letter_list.tmp
     fi
   done
+
   print
   print "Number of words containing each letter:"
   cat letter_list.tmp | sort -rn | uniq
@@ -73,98 +92,75 @@ fi
   print "Hint: When choosing letters for next guess, it is more efficient to choose letters"
   print "which appear in ~50% of the words."
   print
+fi
 
-  print -n "See letter frequency by letter position in guess? (y/n)"
-  read -r RESP
-  if [[ $RESP = "y" ]]; then
-    # Tabulate letter frequency in those positions where no exact match has been found
-    print
-    print "So far, \$ANSWER is $ANSWER"
+print -n "Print letter frequency by letter position in in abridged answer list? (y/n)"
+read -r RESP
+if [[ $RESP = "y" ]]; then
+  # Tabulate letter frequency in those positions where no exact match has been found
+  print
+  print "So far, \$ANSWER is $ANSWER"
 
-    # Find which positions $ANSWER lacks identified letter
-
-    for n in {0..4}; do
-      POSITION=$(( n+1 ))
-      #print "The letter at position $POSITION in \$ANSWER is ${ANSWER:$n:1}"
-      if [[ ${ANSWER:$n:1} = "." ]]; then
-        print
-        if [[ "$VERBOSITY" -ge 1 ]]; then
-          print "No previously guessed letter in position $POSITION."
-        fi
-        # now tabulate the letters in that position in word list,
-        # count the frequency, and display
-        POSSIBLE[$POSITION]=$(cut -c $POSITION abridged_wordle_answer_list.tmp | sort | uniq -c | sort -nr)
-        print "Frequency of letters in position $POSITION in remaining possible answers:"
-        print $POSSIBLE[$POSITION]
-
-      else
-        print
-        print "The letter in position $POSITION is ${ANSWER:$n:1}"
+  # Find which positions $ANSWER lacks identified letter
+  for n in {0..4}; do
+    POSITION=$(( n+1 ))
+    #print "The letter at position $POSITION in \$ANSWER is ${ANSWER:$n:1}"
+    if [[ ${ANSWER:$n:1} = "." ]]; then
+      print
+      if [[ "$VERBOSITY" -ge 1 ]]; then
+        print "No previously guessed letter in position $POSITION."
       fi
-    done
+      # now tabulate the letters in that position in word list,
+      # count the frequency, and display
+      POSSIBLE[$POSITION]=$(cut -c $POSITION abridged_wordle_answer_list.tmp | sort | uniq -c | sort -nr)
+      print "Frequency of letters in position $POSITION in remaining possible answers:"
+      print $POSSIBLE[$POSITION]
 
-  fi
-
-  print
-  print -n "Display abridged answer list? (y/n):"
-  read -r RESP1
-  if [[ $RESP1 = "y" ]]; then
-    print
-    cat abridged_wordle_answer_list.tmp
-  fi
-
-  if [[ "$HARD" -eq 1 ]]; then
-    COUNT=$(wc -l < current_valid_guess_list.tmp)
-    COUNT=${COUNT// }
-    print
-    print "Current valid guess list contains $COUNT words"
-    print -n "Display current valid guesses? (y/n):"
-    read -r RESP
-    if [[ "$RESP" = "y" ]]; then
+    else
       print
-      cat current_valid_guess_list.tmp
+      print "The letter in position $POSITION is ${ANSWER:$n:1}"
     fi
+  done
 
-    print
-    print -n "Display current valid guesses minus previously used answers? (y/n):"
-    read -r RESP
-    if [[ "$RESP" = "y" ]]; then
-      # Create a limited set of possible guesses based on unused_wordle_answers.tmp
-      grep -v -f past_wordle_answers.txt current_valid_guess_list.tmp  > abridged_wordle_guess_list.tmp
-      print
-      COUNT=$(wc -l < abridged_wordle_guess_list.tmp)
-      COUNT=${COUNT// }
-      print "Abridged guess list (excluding previously used wordle answers) contains $COUNT words"
-      print
-        print -n "Display abridged valid guess list? (y/n):"
-        read -r RESP1
-        if [[ "$RESP1" = "y" ]]; then
-          print
-          cat abridged_wordle_guess_list.tmp
-        fi
+fi
 
-    fi
-
-  fi
-
+# if hard mode is enable, display various valid guess lists
+if [[ "$HARD" -eq 1 ]]; then
+  COUNT=$(wc -l < current_valid_guess_list.tmp)
+  COUNT=${COUNT// }
   print
-  print "Completed"
-
-  # Remove tmp files
-  if [[ -e letter_list.tmp ]]; then
-    rm letter_list.tmp
+  print "Current valid guess list contains $COUNT words"
+  print -n "Display current valid guesses? (y/n):"
+  read -r RESP
+  if [[ "$RESP" = "y" ]]; then
+    print
+    cat current_valid_guess_list.tmp
   fi
 
-  if [[ -e abridged_wordle_guess_list.tmp ]]; then
-    rm abridged_wordle_guess_list.tmp
-  fi
+fi
+
+print
+print "Completed"
+
+# Remove tmp files
+if [[ -e letter_list.tmp ]]; then
+  rm letter_list.tmp
+fi
+
+if [[ -e abridged_wordle_answer_list.tmp ]]; then
+  rm abridged_wordle_answer_list.tmp
+fi
+
+if [[ -e abridged_wordle_guess_list.tmp ]]; then
+  rm abridged_wordle_guess_list.tmp
+fi
 
 
-  if [[ "$VERBOSITY" -eq 2 ]]; then
-    print "Returning execution to wordle_solver.master.dev"
-  fi
+if [[ "$VERBOSITY" -eq 2 ]]; then
+  print "Returning execution to wordle_solver.master.dev"
+fi
 
-  return
+return
 
 
 

@@ -230,7 +230,9 @@ fi
 
       # If hard mode is enabled, use ANSWER to prune current_valid_guess_list.tmp
       if [[ "$HARD" -eq 1 ]]; then
-        print "Removing valid guesses which do not match ANSWER"
+        if [[ "$VERBOSITY" -eq 2 ]]; then
+          print "Removing valid guesses which do not match ANSWER"
+        fi
         grep --regexp="$ANSWER" current_valid_guess_list.tmp > corrected_guess_list.tmp
 
         # Check for grep errors
