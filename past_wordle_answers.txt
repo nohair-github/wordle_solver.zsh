@@ -138,6 +138,7 @@ croak
 cross
 crust
 cynic
+dance
 dandy
 death
 delta

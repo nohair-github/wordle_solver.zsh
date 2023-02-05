@@ -13,7 +13,9 @@ if [[ $? -eq 0 ]]; then
 fi
 
 lines=$(wc -l < past_wordle_answers.txt)
-print "past_wordle_answers.txt contains $lines answers"
+if [[ "$VERBOSITY" -ge 1 ]]; then
+  print "past_wordle_answers.txt contains $lines answers"
+fi
 print "Adding $ANSWER to past_wordle_answers.txt"
 echo $ANSWER >> past_wordle_answers.txt
 
@@ -23,7 +25,9 @@ cp past_wordle_answers.tmp past_wordle_answers.txt
 
 # Display new count of past_wordle_answers.txt
 lines=$(wc -l < past_wordle_answers.txt)
-print "past_wordle_answers.txt now contains $lines answers"
+if [[ "$VERBOSITY" -ge 1 ]]; then
+  print "past_wordle_answers.txt now contains $lines answers"
+fi
 
 #Back up list of past wordle answers
 mv past_wordle_answers.tmp past_wordle_answers.txt.bak
