@@ -52,6 +52,7 @@
         fi
 
         # Loop through partially matching letters to check if they are actually in GUESS
+        INVALID=0
         for j in {1..$LEN}; do
           OFFSET=$(( $j-1 ))
           if [[ "$VERBOSITY" -eq 2 ]]; then

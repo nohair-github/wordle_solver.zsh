@@ -28,6 +28,7 @@ ample
 angry
 antic
 aphid
+apple
 apply
 apron
 aptly
@@ -352,6 +353,7 @@ natal
 naval
 needy
 night
+ninth
 nymph
 octal
 offal
