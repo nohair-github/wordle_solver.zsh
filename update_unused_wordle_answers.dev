@@ -12,9 +12,9 @@ if [[ $? -eq 0 ]]; then
   return
 fi
 
-lines=$(wc -l < past_wordle_answers.txt)
+LINES=$(wc -l < past_wordle_answers.txt)
 if [[ "$VERBOSITY" -ge 1 ]]; then
-  print "past_wordle_answers.txt contains $lines answers"
+  print "past_wordle_answers.txt contains $LINES answers"
 fi
 print "Adding $ANSWER to past_wordle_answers.txt"
 echo $ANSWER >> past_wordle_answers.txt
@@ -24,9 +24,9 @@ sort past_wordle_answers.txt > past_wordle_answers.tmp
 cp past_wordle_answers.tmp past_wordle_answers.txt
 
 # Display new count of past_wordle_answers.txt
-lines=$(wc -l < past_wordle_answers.txt)
+LINES=$(wc -l < past_wordle_answers.txt)
 if [[ "$VERBOSITY" -ge 1 ]]; then
-  print "past_wordle_answers.txt now contains $lines answers"
+  print "past_wordle_answers.txt now contains $LINES answers"
 fi
 
 #Back up list of past wordle answers
@@ -43,9 +43,9 @@ then
 fi
 touch corrected_unused_wordle_answers.txt
 
-lines=$(wc -l < unused_wordle_answers.txt)
+LINES=$(wc -l < unused_wordle_answers.txt)
 if [[ "$VERBOSITY" -ge 1 ]]; then
-  print "unused_wordle_answers.txt contains $lines lines"
+  print "unused_wordle_answers.txt contains $LINES lines"
   print "Deleting $ANSWER from unused_wordle_answers.txt"
 fi
 
@@ -58,19 +58,19 @@ grep -v "$ANSWER" unused_wordle_answers.txt > corrected_unused_wordle_answers.tx
     exit 1
   fi
 
-lines=$(wc -l < corrected_unused_wordle_answers.txt)
+LINES=$(wc -l < corrected_unused_wordle_answers.txt)
 
 if [[ "$VERBOSITY" -ge 1 ]]; then
-  print "corrected_unused_wordle_answers.txt now contains $lines lines"
+  print "corrected_unused_wordle_answers.txt now contains $LINES lines"
 fi
 
 print "Updating unused_wordle_answers.txt ..."
 
 cat corrected_unused_wordle_answers.txt > unused_wordle_answers.txt
 
-lines=$(wc -l < unused_wordle_answers.txt)
+LINES=$(wc -l < unused_wordle_answers.txt)
 if [[ "$VERBOSITY" -ge 1 ]]; then
-  print "unused_wordle_answers.txt now contains $lines lines"
+  print "unused_wordle_answers.txt now contains $LINES lines"
 fi
 
 print "... Done."
@@ -81,4 +81,3 @@ fi
 
 return
 
-return

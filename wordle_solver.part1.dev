@@ -117,11 +117,11 @@ fi
       # Deal with $COUNT
         if [[ "$COUNT" -eq 0 ]]; then
           print "ERROR - $MATCH does not actually exist in ${GUESS[i]}"
-          exit
+          exit 1
 
         elif [[ "$COUNT" -gt 3 ]]; then
           print "What? More than 3 $MATCH's! That's an error."
-          exit
+          exit 2
 
         elif [[ "$COUNT" -eq 1 ]]; then
           if [[ "$VERBOSITY" -eq 2 ]]; then
@@ -199,7 +199,7 @@ fi
                   print
                 else
                   print "Error - incorrect input. Exiting"
-                  exit 4
+                  exit 3
                 fi
 
               fi
@@ -225,7 +225,7 @@ fi
       # Check for grep errors
       if [[ $? -ne "0" ]]; then
         print -n "Error in grep. Exiting."
-        exit 6
+        exit 4
       fi
 
       # If hard mode is enabled, use ANSWER to prune current_valid_guess_list.tmp
@@ -238,7 +238,7 @@ fi
         # Check for grep errors
         if [[ $? -ne "0" ]]; then
           print -n "Error in grep of current_valid_guess_list.tmp. Exiting."
-          exit 6
+          exit 5
         fi
 
         # Display result for debug
@@ -288,7 +288,7 @@ fi
         print
         print "Zero words remaining - Error."
         print
-        exit
+        exit 6
       fi
 
 

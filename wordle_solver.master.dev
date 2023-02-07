@@ -45,7 +45,7 @@ while [[ "$1" != "" ]]; do
         -h | --help )           usage
                                 ;;
         * )                     usage
-                                exit 1
+                                exit 2
     esac
   fi
   shift
@@ -59,7 +59,7 @@ elif [[ "$VERBOSITY" = 2 ]]; then
   DESCRIPTION="debug"
 else
   print "Error in setting verbosity - Exiting"
-  exit
+  exit 3
 fi
 
 if [[ "$VERBOSITY" -eq 2 ]]; then
@@ -159,7 +159,7 @@ for i in {1..6}; do
 
   if [[ "$VALID" -eq 0 ]]; then
     echo >&2 "There was an error in input."
-    exit 1
+    exit 4
   else
     # Confirm guess
     print
@@ -248,14 +248,14 @@ for i in {1..6}; do
         # Clear tmp files
         rm *.tmp
         print "Finished"
-        exit
+        exit 0
       elif [[ "$RESP2" = "n" ]]; then
         print "Remember to update unused_wordle_answers.txt."
         VALID=1
         # Clear tmp files
         rm *.tmp
         print "Finished"
-        exit
+        exit 0
       else
         print "$RESP2 is an invalid entry."
       fi

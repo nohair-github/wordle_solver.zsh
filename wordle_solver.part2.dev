@@ -241,7 +241,7 @@
           print "Likely there were no matches to the pattern."
           print "PATTERN might be in error."
           print "Exiting."
-          exit 9
+          exit 2
         fi
 
         # Now select words in corrected_guess_list.tmp which match pattern
@@ -252,7 +252,7 @@
           if [[ $? -ne "0" ]]; then
             print "Error in grep of corrected_guess_list.tmp line 248"
             print "Exiting."
-            exit 1
+            exit 3
           fi
 
           # Display result for debug
@@ -292,7 +292,7 @@
             print "Error in grep."
             print "Likely there were no matches to the pattern."
             print "Exiting."
-            exit 9
+            exit 4
           fi
 
           # If hard mode enabled, select words in corrected_guess_list.tmp which match pattern
@@ -303,7 +303,7 @@
             if [[ $? -ne "0" ]]; then
               print "Error in grep of corrected_guess_list.tmp lien 299."
               print "Exiting."
-              exit 1
+              exit 5
             fi
 
             # Display result for debug
@@ -323,7 +323,7 @@
                   print
         else
           print "Error - incorrect input. Exiting"
-          exit 4
+          exit 6
         fi
 
       fi

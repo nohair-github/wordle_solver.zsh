@@ -33,7 +33,7 @@
   if [[ "$LEN" -gt 5 ]]; then
     print
     print "Error - more than 5 letters in $WRONG."
-    exit
+    exit 1
 
   elif [[ "$LEN" -ge 1 ]]; then
 
@@ -57,11 +57,11 @@
 
       if [[ "$COUNT" -eq 0 ]]; then
         print "ERROR - $LETTER does not actually exist in ${GUESS[i]}"
-        exit
+        exit 2
 
       elif [[ "$COUNT" -gt 3 ]]; then
         print "What? More than 3 $LETTER's! That's an error."
-        exit
+        exit 3
 
       else
         if [[ "$VERBOSITY" -eq 2 ]]; then
@@ -90,7 +90,7 @@
           if [[ $? -ne "0" ]]; then
             print "Error in grep of corrected_guess_list.tmp line 87"
             print "Exiting."
-            exit 1
+            exit 4
           fi
 
           # Display result for debug
@@ -139,16 +139,16 @@
         print "All letters matched in some way. You are nearly there."
       elif [[ "$RESP1" = "n" ]]; then
         print -n "Error in determining \$WRONG"
-        exit
+        exit 5
       else
         print "Invalid entry."
-        exit
+        exit 6
       fi
 
   else
   # Some kind of error in LEN
     print "Error in \$LEN"
-    exit
+    exit 7
 
   fi
 
