@@ -1,12 +1,12 @@
 #!/bin/zsh
 
-# wordle_solver.part3.v0.2
+# wordle_solver.part3.v0.3
 # Wordle solver subscript by gsb
 
-  if [[ "$VERBOSITY" -ge 1 ]]; then
-    print "wordle_solver.part3.v0.2"
-    print
+  if [[ "$VERBOSITY" -eq 2 ]]; then
+    print "wordle_solver.part3.v0.3"
   fi
+  print
 
   # Determine unmatched letters in guess
   WRONG=$( echo "${GUESS[$i]}" | tr -d "$LET" | tr -d "$CORRECT" )
@@ -18,7 +18,7 @@
     print "That means the unmatched letter(s) were \"$WRONG\"."
     print
   fi
-  
+
   PART3=$(wc -l < list.tmp)
   PART3=${PART3// }
 
@@ -33,7 +33,7 @@
   if [[ "$LEN" -gt 5 ]]; then
     print
     print "Error - more than 5 letters in $WRONG."
-    exit
+    exit 1
 
   elif [[ "$LEN" -ge 1 ]]; then
 
@@ -54,49 +54,77 @@
       if [[ $? -ne 0 ]]; then
         print "Error in grep - \$\?=$?"
       fi
-            
+
       if [[ "$COUNT" -eq 0 ]]; then
         print "ERROR - $LETTER does not actually exist in ${GUESS[i]}"
-        exit
-          
+        exit 2
+
       elif [[ "$COUNT" -gt 3 ]]; then
         print "What? More than 3 $LETTER's! That's an error."
-        exit
+        exit 3
 
       else
-        if [[ "$VERBOSITY" -ge 1 ]]; then
+        if [[ "$VERBOSITY" -eq 2 ]]; then
           print "Letter $LETTER appears in ${GUESS[i]} $COUNT times"
         fi
 
         # Set up a template for regex using string replacement to substitute
         # ^$LETTER for each "." in ANSWER
-        TEMPLATE=${ANSWER//./"[^$LETTER]"}      
+        TEMPLATE=${ANSWER//./"[^$LETTER]"}
         if [[ "$VERBOSITY" -eq 2 ]]; then
           print "TEMPLATE is $TEMPLATE"
           print
         fi
-  
+
         # Now select only those words which match pattern
         if [[ "$VERBOSITY" -eq 2 ]]; then
           print "Selecting remaining words matching $TEMPLATE"
         fi
         grep --regexp="$TEMPLATE" list.tmp > list_$i.txt
 
+        # If hard mode, repeat selection on current_valid_guess_list.tmp
+        if [[ "$HARD" -eq 1 ]]; then
+          grep --regexp="$TEMPLATE" current_valid_guess_list.tmp > corrected_guess_list.tmp
+
+          # Check for grep errors
+          if [[ $? -ne "0" ]]; then
+            print "Error in grep of corrected_guess_list.tmp line 87"
+            print "Exiting."
+            exit 4
+          fi
+
+          # Display result for debug
+          if [[ "$VERBOSITY" -eq 2 ]]; then
+            CURRENT=$(wc -l < current_valid_guess_list.tmp)
+            CURRENT=${CURRENT// }
+            CNT=$(wc -l < corrected_guess_list.tmp)
+            CNT=${CNT// }
+            print "$CURRENT current valid guesses reduced to $CNT valid quesses in this step"
+          fi
+          cat corrected_guess_list.tmp > current_valid_guess_list.tmp
+        fi
+
+
+
+
         # Tabulate and display results after matching for TEMPLATE
-        PREV=$(wc -l < list.tmp)
-        PREV=${PREV// }
-        CNT=$(wc -l < list_$i.txt)
-        CNT=${CNT// }
-        DISCARD=$(( $PREV-$CNT ))
-        print "After excluding words with $LETTER, $DISCARD further words eliminated; $CNT words remaining."
         if [[ "$VERBOSITY" -ge 1 ]]; then
-          print -n "See list of remaining words? (y/n)"
-          read -r RESP3
-          if [[ "$RESP3" = "y" ]]; then
-            cat list_$i.txt 
+          PREV=$(wc -l < list.tmp)
+          PREV=${PREV// }
+          CNT=$(wc -l < list_$i.txt)
+          CNT=${CNT// }
+          DISCARD=$(( $PREV-$CNT ))
+          print "After excluding words containing $LETTER, $DISCARD further words eliminated; $CNT words remaining."
+          print
+          if [[ "$VERBOSITY" -eq 2 ]]; then
+            print -n "See list of remaining words? (y/n)"
+            read -r RESP3
+            if [[ "$RESP3" = "y" ]]; then
+              cat list_$i.txt
+            fi
           fi
         fi
-              
+
         # Update list.tmp
         cat list_$i.txt > list.tmp
 
@@ -108,41 +136,41 @@
     print -n "There are no letters which do not match. Correct? (y/n)"
     read -r RESP1
       if [[ "$RESP1" = "y" ]]; then
-        print "All letters matched in some way. You are nearly there."      
+        print "All letters matched in some way. You are nearly there."
       elif [[ "$RESP1" = "n" ]]; then
         print -n "Error in determining \$WRONG"
-        exit
+        exit 5
       else
         print "Invalid entry."
-        exit
+        exit 6
       fi
 
   else
   # Some kind of error in LEN
     print "Error in \$LEN"
-    exit
+    exit 7
 
   fi
 
-  # Tabulate and display results after step 3
-  CNT=$(wc -l < list_$i.txt)
-  CNT=${CNT// }
-  DISCARD=$(( $PART3-$CNT ))
-  print
-  print "After step 3, $DISCARD further words eliminated; $CNT words remaining."
-  if [[ "$VERBOSITY" -ge 1 ]]; then
-    print -n "See list of remaining words? (y/n)"
-    read -r RESP3
-    if [[ "$RESP3" = "y" ]]; then
-      cat list_$i.txt
+  # Tabulate and display results after part 3
+    CNT=$(wc -l < list_$i.txt)
+    CNT=${CNT// }
+    DISCARD=$(( $PART3-$CNT ))
+    print "After excluding words with the letter(s) \"$WRONG\", $DISCARD further words eliminated; $CNT words remaining."
+    if [[ "$VERBOSITY" -eq 2 ]]; then
+      print -n "See list of remaining words? (y/n)"
+      read -r RESP3
+      if [[ "$RESP3" = "y" ]]; then
+        cat list_$i.txt
+      fi
     fi
-  fi
-  
+
   # Update list.tmp
   cat list_$i.txt > list.tmp
-  
-  if [[ "$VERBOSITY" -eq 2 ]]; then          
-    print "Returning execution to wordle_solver.master.v0.2"
+
+  if [[ "$VERBOSITY" -eq 2 ]]; then
+    print "Returning execution to wordle_solver.master.v0.3"
   fi
 
-  return    
+  return
+

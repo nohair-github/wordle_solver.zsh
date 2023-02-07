@@ -1,18 +1,20 @@
-#!/bin/bash
+#!/bin/zsh
 
-# wordle_solver.part1.v0.2
-# Wordle solver subscript by gsb
+# wordle_solver.part1.v0.3
 
-# Developed on macos 16.2 and zsh 5.8.1
+# Wordle solver script by gsb
+
+# Developed on macos 16.1 (21.6.0 Darwin Kernel Version 21.6.0: root:xnu-8020.240.7~1/RELEASE_X86_64)
+# and zsh (zsh 5.8.1 (x86_64-apple-darwin21.0)
 
 print
 
 if [[ "$VERBOSITY" -eq 2 ]]; then
-  print "wordle_solver.part1.v0.2"
+  print "wordle_solver.part1.v0.3"
   print
 fi
 
-# Part 1: secondary loop to eliminate words without perfectly matched 
+# Part 1: secondary loop to eliminate words not perfectly matched
 # letter(s) in correct position
 
   VALID=0
@@ -22,11 +24,13 @@ fi
     if [[ "$RESP11" = "y" ]]; then
       print -n "Enter letter(s) which exactly matched (in any order):"
       read -r CORRECT
-      print "You entered \"$CORRECT\"."
+      if [[ "$VERBOSITY" -eq 2 ]]; then
+        print "You entered \"$CORRECT\"."
+      fi
 
       # Check if any letters in $CORRECT do not appear in GUESS
       if [[ "$VERBOSITY" -eq 2 ]]; then
-      print "Checking for invalid letters in $CORRECT"      
+        print "Checking for invalid letters in $CORRECT"
       fi
       LEN="${#CORRECT}"
       if [[ "$VERBOSITY" -eq 2 ]]; then
@@ -44,10 +48,10 @@ fi
           print "Checking letter $j: \$LETTER is $LETTER"
         fi
         COUNT=$( grep -o "$LETTER" <<<"${GUESS[$i]}" | wc -l )
-        COUNT=${COUNT// }          
+        COUNT=${COUNT// }
         if [[ "$VERBOSITY" -eq 2 ]]; then
           print "Letter $LETTER appears in ${GUESS[$i]} $COUNT times"
-          #print "\$? is $?"         
+          #print "\$? is $?"
         fi
 
         if [[ "$COUNT" -eq 0 ]]; then
@@ -75,7 +79,7 @@ fi
 
   # Find string length of $CORRECT
   LEN="${#CORRECT}"
-  if [[ "$VERBOSITY" -ge 1 ]]; then
+  if [[ "$VERBOSITY" -eq 2  ]]; then
     print "Number of letters exactly matched is $LEN"
     print
   fi
@@ -87,7 +91,7 @@ fi
 
       # First, determine the current letter 
       OFFSET=$(( $j-1 ))
-      
+
       if [[ "$VERBOSITY" -eq 2 ]]; then
         print "\$OFFSET is $OFFSET"
       fi
@@ -112,11 +116,11 @@ fi
       # Deal with $COUNT
         if [[ "$COUNT" -eq 0 ]]; then
           print "ERROR - $MATCH does not actually exist in ${GUESS[i]}"
-          exit
+          exit 1
 
         elif [[ "$COUNT" -gt 3 ]]; then
           print "What? More than 3 $MATCH's! That's an error."
-          exit
+          exit 2
 
         elif [[ "$COUNT" -eq 1 ]]; then
           if [[ "$VERBOSITY" -eq 2 ]]; then
@@ -151,12 +155,12 @@ fi
           if [[ "$COUNT" -eq 2 ]]; then
             print "$MATCH occurs twice in ${GUESS[i]}"
           fi
-          
+
           if [[ "$COUNT" -eq 3 ]]; then
             print "$MATCH occurs three times in ${GUESS[i]}"
           fi
-            
-          # Find the positions of the occurrences of $MATCH        
+
+          # Find the positions of the occurrences of $MATCH
           k=0
           # Loop through letters in guess to find matches
           for l in {1..5}; do
@@ -185,8 +189,6 @@ fi
                 read -r RESP
                 if [[ "$RESP" = "y" ]]; then
                   # Add letter to $ANSWER
-                  print "would add letter to answer here"
-
                   ANSWER="${ANSWER:0:$(($l-1))}""$MATCH""${ANSWER:$l}"
                   if [[ "$VERBOSITY" -ge 1 ]]; then
                     print "\$ANSWER is now $ANSWER"
@@ -196,7 +198,7 @@ fi
                   print
                 else
                   print "Error - incorrect input. Exiting"
-                  exit 4
+                  exit 3
                 fi
 
               fi
@@ -205,45 +207,76 @@ fi
 
           done
           # End of loop through letters in guess to find matches
-  
+
         print
 
         fi
 
       print
 
-      if [[ "$VERBOSITY" -ge 1 ]]; then
+      if [[ "$VERBOSITY" -eq 2 ]]; then
         print "Finding words that match pattern $ANSWER"
       fi
 
       # Now select only those words which match pattern
       grep --regexp="$ANSWER" list.tmp > list_$i.txt
-            
+
       # Check for grep errors
       if [[ $? -ne "0" ]]; then
         print -n "Error in grep. Exiting."
-        exit 6
+        exit 4
       fi
 
+      # If hard mode is enabled, use ANSWER to prune current_valid_guess_list.tmp
+      if [[ "$HARD" -eq 1 ]]; then
+        if [[ "$VERBOSITY" -eq 2 ]]; then
+          print "Removing valid guesses which do not match ANSWER"
+        fi
+        grep --regexp="$ANSWER" current_valid_guess_list.tmp > corrected_guess_list.tmp
+
+        # Check for grep errors
+        if [[ $? -ne "0" ]]; then
+          print -n "Error in grep of current_valid_guess_list.tmp. Exiting."
+          exit 5
+        fi
+
+        # Display result for debug
+        if [[ "$VERBOSITY" -eq 2 ]]; then
+          CURRENT=$(wc -l < current_valid_guess_list.tmp)
+          CURRENT=${CURRENT// }
+          CNT=$(wc -l < corrected_guess_list.tmp)
+          CNT=${CNT// }
+          print "$CURRENT valid guesses reduced to $CNT valid quesses in part 1"
+        fi
+        cat corrected_guess_list.tmp > current_valid_guess_list.tmp
+      fi
 
       # Tabulate and display results after part 1
-      print "After matching for words containing $MATCH in pattern $ANSWER,"
       PART1=$(wc -l < list.tmp)
       PART1=${PART1// }
       CNT=$(wc -l < list_$i.txt)
       CNT=${CNT// }
       DISCARD=$(( $PART1-$CNT ))
-      if [[ "$VERBOSITY" -ge 1 ]]; then
-        print "Part 1 started with $PART1 words out of an initial $TOTAL words."
+      if [[ "$i" -gt 1 ]]; then
+        print "Before solving this guess, $PART1 words remained out of an initial $TOTAL words."
       fi
 
+      print -n "After matching for words containing $MATCH"
+      if [[ "$VERBOSITY" -ne 2 ]]; then
+        print ","
+      fi
+      if [[ "$VERBOSITY" -eq 2 ]]; then
+        print " in pattern $ANSWER,"
+      fi
+
+
       print "$DISCARD words eliminated; $CNT words remaining."
-      if [[ "$VERBOSITY" -ge 1 ]]; then
+      if [[ "$VERBOSITY" -eq 2 ]]; then
         print -n "See list of remaining words? (y/n)"
         read -r RESP6
           if [[ "$RESP6" = "y" ]]; then
             cat list_$i.txt
-          fi  
+          fi
       fi
 
       # Write list_$i.txt to list.tmp for processing in next step
@@ -254,7 +287,7 @@ fi
         print
         print "Zero words remaining - Error."
         print
-        exit
+        exit 6
       fi
 
 
@@ -270,7 +303,7 @@ fi
         print -n "Update unused_wordle_answers.txt? (y/n)"
         read -r RESP10
           if [[ "$RESP10" = "y" ]]; then
-             . ./update_unused_wordle_answers.txt.zsh
+             . ./update_unused_wordle_answers.v0.3
           fi
         exit 0
       fi
@@ -278,7 +311,7 @@ fi
     done
     # End of loop through matching letters
 
-    if [[ "$VERBOSITY" -ge 1 ]]; then
+    if [[ "$VERBOSITY" -eq 2 ]]; then
       print "Finished checking perfectly matched letters."
     fi
 
@@ -287,10 +320,9 @@ fi
     print
   fi
 
-  if [[ "$VERBOSITY" -ge 1 ]]; then
-    print
-    print "End of part 1"
-    print "Returning execution to wordle_solver.master.v0.2"
+  if [[ "$VERBOSITY" -eq 2 ]]; then
+    print "Returning execution to wordle_solver.master.v0.3"
   fi
 
   return
+
