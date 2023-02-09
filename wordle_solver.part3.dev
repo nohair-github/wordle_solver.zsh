@@ -9,8 +9,22 @@
   print
 
   # Determine unmatched letters in guess
-  WRONG=$( echo "${GUESS[$i]}" | tr -d "$LET" | tr -d "$CORRECT" )
 
+#  WRONG=$( echo "${GUESS[$i]}" | tr -d "$LET" | tr -d "$CORRECT" )
+
+#  Call wordle_solver.part3a.dev
+
+  if [[ "$VERBOSITY" -eq 2 ]]; then
+    print "Calling wordle_solver.part3a.dev"
+  fi
+
+   . ./wordle_solver.part3a.dev
+
+  if [[ "$VERBOSITY" -eq 2 ]]; then
+    print "Execution returned to wordle_solver.part3.dev"
+  fi
+
+# Display unmatched letters
   if [[ "$WRONG" = "" ]]; then
     print "No unmatched letters. Wordle is solved - or very close."
     return
