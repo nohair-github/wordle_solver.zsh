@@ -12,8 +12,7 @@ formatting, correcting and improving logic, correcting regexs, changing variable
 
 Version 0.03 (11/24/22): Added basic analysis subroutine, added more error trapping,
 edited messages to be more informative, somewhat less debug and extraneous messages, more informative,
-improving logic.
-
+improving logic, added proper handling of variables passed from main in analysis script
 Version 0.031: last unitary script.
 
 Version 0.04 (12/23/22): Split matching steps into subprograms, re-ordered matching logic and sequence,
@@ -47,6 +46,13 @@ fixed input loops in part 1 and part2 to handle erroneous input without exiting
 standardized []'s to [[]]'s
 changed part 3 to automatically select incorrect letters
 numbered exit codes sequentially in each script to help debugging
+added list of total letter frequency in analysis script
+changed analysis to be based on unused answers
+added handling of current_valid_guess_list.tmp in hard mode
 multiple other bug fixes
+
+Added since v0.3:
+edited VERBOSITY switches and messages in update_unused_wordle_answers script
+added subscript 3a to handle duplicated letter in guess as part of part 3
 
 To be done: module to suggest guesses, further bug fixes, better tabulation of progress, and more tbd

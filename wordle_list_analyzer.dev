@@ -8,14 +8,6 @@
 # Developed on macos 16.1 (21.6.0 Darwin Kernel Version 21.6.0: root:xnu-8020.240.7~1/RELEASE_X86_64)
 # and zsh (zsh 5.8.1 (x86_64-apple-darwin21.0)
 
-# v0.01 11/24/22 gsb: basic functionality and debugging
-
-# Added so far in this version: proper handling of variables passed from main, list total letter frequency
-# of list of remaining answers, not just by position, changed analysis to be based on unused answers
-
-# To be added: change y/n questions not to exit on invalid entry, handling of current_valid_guess_list.tmp in hard mode,
-# tbd
-
 # Clear tmp files
 if [[ -e letter_list.tmp ]]; then
   rm letter_list.tmp

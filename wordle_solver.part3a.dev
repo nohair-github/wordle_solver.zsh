@@ -41,11 +41,11 @@
     # Now deal with COUNT
     if [[ "$COUNT" -lt 1 ]]; then
       print "ERROR - ${CORRECT:$j:1} does not actually exist in ${GUESS[i]}"
-      exit
+      exit 1
 
     elif [[ "$COUNT" -gt 3 ]]; then
       print "More than 3 duplicates of ${CORRECT:$j:1}! Error."
-      exit
+      exit 2
 
 #   If only one occurrence, delete from $WRONG
     elif [[ "$COUNT" -eq 1 ]]; then
