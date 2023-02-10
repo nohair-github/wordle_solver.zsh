@@ -13,10 +13,12 @@ if [[ $? -eq 0 ]]; then
 fi
 
 LINES=$(wc -l < past_wordle_answers.txt)
-if [[ "$VERBOSITY" -ge 1 ]]; then
+if [[ "$VERBOSITY" -eq 2 ]]; then
   print "past_wordle_answers.txt contains $LINES answers"
 fi
-print "Adding $ANSWER to past_wordle_answers.txt"
+if [[ "$VERBOSITY" -ge 1 ]]; then
+  print "Adding $ANSWER to past_wordle_answers.txt"
+fi
 echo $ANSWER >> past_wordle_answers.txt
 
 # Sort past_wordle_answers.txt alphabetically
@@ -25,7 +27,7 @@ cp past_wordle_answers.tmp past_wordle_answers.txt
 
 # Display new count of past_wordle_answers.txt
 LINES=$(wc -l < past_wordle_answers.txt)
-if [[ "$VERBOSITY" -ge 1 ]]; then
+if [[ "$VERBOSITY" -eq 2 ]]; then
   print "past_wordle_answers.txt now contains $LINES answers"
 fi
 
@@ -44,8 +46,8 @@ fi
 touch corrected_unused_wordle_answers.txt
 
 LINES=$(wc -l < unused_wordle_answers.txt)
-if [[ "$VERBOSITY" -ge 1 ]]; then
-  print "unused_wordle_answers.txt contains $LINES lines"
+if [[ "$VERBOSITY" -eq 2 ]]; then
+  print "unused_wordle_answers.txt contains $LINES words"
   print "Deleting $ANSWER from unused_wordle_answers.txt"
 fi
 
@@ -60,8 +62,8 @@ grep -v "$ANSWER" unused_wordle_answers.txt > corrected_unused_wordle_answers.tx
 
 LINES=$(wc -l < corrected_unused_wordle_answers.txt)
 
-if [[ "$VERBOSITY" -ge 1 ]]; then
-  print "corrected_unused_wordle_answers.txt now contains $LINES lines"
+if [[ "$VERBOSITY" -eq 2 ]]; then
+  print "corrected_unused_wordle_answers.txt now contains $LINES words"
 fi
 
 print "Updating unused_wordle_answers.txt ..."
@@ -70,14 +72,13 @@ cat corrected_unused_wordle_answers.txt > unused_wordle_answers.txt
 
 LINES=$(wc -l < unused_wordle_answers.txt)
 if [[ "$VERBOSITY" -ge 1 ]]; then
-  print "unused_wordle_answers.txt now contains $LINES lines"
+  print "unused_wordle_answers.txt now contains $LINES words"
 fi
 
 print "... Done."
 
-if [[ "$VERBOSITY" -ge 1 ]]; then
+if [[ "$VERBOSITY" -eq 2 ]]; then
   print "Returning execution to wordle_solver.master.v0.3"
 fi
 
 return
-
