@@ -53,6 +53,6 @@ multiple other bug fixes
 
 Added since v0.3:
 edited VERBOSITY switches and messages in update_unused_wordle_answers script
-added subscript 3a to handle duplicated letter in guess as part of part 3
+added subscript 3a to handle duplicated letters in guess as part of part 3
 
 To be done: module to suggest guesses, further bug fixes, better tabulation of progress, and more tbd
