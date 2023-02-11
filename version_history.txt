@@ -2,47 +2,63 @@ Wordle solver script by gsb
 
 wordle_solver version history
 
-Developed on macos 12.6.2 (21.6.0 Darwin Kernel Version 21.6.0: root:xnu-8020.240.7~1/RELEASE_X86_64)
-and zsh (zsh 5.8.1 (x86_64-apple-darwin21.0)
+Developed on macos 12.6.2 (21.6.0 Darwin Kernel Version 21.6.0: root:xnu-8020.240.7~1/RELEASE_X86_64) and zsh (zsh 5.8.1 (x86_64-apple-darwin21.0)
 
 Version 0.01 (11/20/22): getting script to function, including lots of diagnostic and debug messages.
 
-Version 0.02 (11/23/22): Less debug and extraneous messages, more informative messaging, corrected
-formatting, correcting and improving logic, correcting regexs, changing variable names to all caps.
+Version 0.02 (11/23/22):
+Less debug and extraneous messages
+more informative messaging
+corrected formatting
+correcting and improving logic
+correcting regexs
+changing variable names to all caps.
 
-Version 0.03 (11/24/22): Added basic analysis subroutine, added more error trapping,
-edited messages to be more informative, somewhat less debug and extraneous messages, more informative,
-improving logic, added proper handling of variables passed from main in analysis script
+Version 0.03 (11/24/22):
+added basic analysis subroutine
+added more error trapping
+edited messages to be more informative
+somewhat less debug and extraneous messages, more informative,
+improving logic
+added proper handling of variables passed from main in analysis script
+
 Version 0.031: last unitary script.
 
-Version 0.04 (12/23/22): Split matching steps into subprograms, re-ordered matching logic and sequence,
-added logic to deal with duplicate letters in guesses and answers, initial input loop changes to allow typos,
+Version 0.04 (12/23/22):
+Split matching steps into subprograms
+re-ordered matching logic and sequence
+added logic to deal with duplicate letters in guesses and answers
+initial input loop changes to allow typos
 incorporation of Wordle's allowed guesses list
 
 Version 0.1 (1/14/23): Added since v0.04:
-list-$i.txt copied to $ANSWER if one solution left,
-link changed to update_unused_wordle_answers.txt.zsh,
-corrected references to list_$i.txt and list.tmp so they are updated when exiting subroutine,
-addition of verbosity switches in some locations,
-checking validity of response and trap errors,
-change y/n input loops where appropriate to handle invalid answers without exiting,
-better analysis after each guess to include total letter frequency not just by position (analyzer subroutine),
-incorporation of list of unused answers reducing universe of possibles (analyzer subroutine),
-bug fixes, improved handling of words with duplicate letters,
-added option flags for -v --verbose, and -q --quiet,
+list-$i.txt copied to $ANSWER if one solution left
+link changed to update_unused_wordle_answers.txt.zsh
+corrected references to list_$i.txt and list.tmp so they are updated when exiting subroutine
+addition of verbosity switches in some locations
+checking validity of response and trap errors
+change y/n input loops where appropriate to handle invalid answers without exiting
+better analysis after each guess to include total letter frequency not just by position (analyzer subroutine)
+incorporation of list of unused answers reducing universe of possibles (analyzer subroutine)
+bug fixes
+improved handling of words with duplicate letters
+added option flags for -v --verbose, and -q --quiet
 improved logic and algoritm to eliminate unmatched letters.
 
 Version 0.2 (1/27/23): Added since v0.1 -
-began supporting --debug flag and altering --verbose switches, fixed handling of null input in part 2 script,
-fixed handling of duplicate letters in part2, changed part 3 script to automatically select unmatched letters,
-continued standardization of ['s to [['s and variable quoting inside brackets, changed wordle_list_analyzer
-to display data based on unused answer list, fixed input loop on part2 to handle invalid answers,
+began supporting --debug flag and altering --verbose switches
+fixed handling of null input in part 2 script
+fixed handling of duplicate letters in part 2
+changed part 3 script to automatically determine unmatched letters
+continued standardization of ['s to [['s and variable quoting inside brackets
+changed wordle_list_analyzer to display data based on unused answer list
+fixed input loop on part2 to handle invalid answers,
 link changed to update_unused_wordle_answers.v0.2, further bug fixes
 
 Version 0.3 (2/7/23): Added since v0.2 -
 further incorporation and testing for output with VERBOSITY switch
 added hard mode (HARD) switch with pruning of valid guess list
-fixed input loops in part 1 and part2 to handle erroneous input without exiting
+fixed input loops in part 1 and part 2 to handle erroneous input without exiting
 standardized []'s to [[]]'s
 changed part 3 to automatically select incorrect letters
 numbered exit codes sequentially in each script to help debugging
@@ -53,6 +69,6 @@ multiple other bug fixes
 
 Added since v0.3:
 edited VERBOSITY switches and messages in update_unused_wordle_answers script
-added subscript 3a to handle duplicated letters in guess as part of part 3
+added subscript 3a to handle duplicate letters in guess as part of part 3
 
 To be done: module to suggest guesses, further bug fixes, better tabulation of progress, and more tbd
