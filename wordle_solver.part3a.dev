@@ -99,7 +99,7 @@
   if [[ "$VERBOSITY" -eq 2 ]]; then
     print "\$WRONG is $WRONG"
   fi
-  WRONG=$( echo $WRONG | fold -w1 | sort | uniq | tr -d '\n')
+  WRONG=$( echo $WRONG | tr -s 'a-z' )
   if [[ "$VERBOSITY" -eq 2 ]]; then
     print "\$WRONG is now $WRONG"
   fi

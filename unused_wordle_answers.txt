@@ -380,6 +380,7 @@ daunt
 dealt
 debar
 debit
+debug
 debut
 decal
 decay
