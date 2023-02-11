@@ -127,7 +127,8 @@ fi
           if [[ "$VERBOSITY" -eq 2 ]]; then
             print "$MATCH occurs once in ${GUESS[i]}"
           fi
-          # Find position of first matched letter in the GUESS[i].
+
+          # Find position of matched letter in the GUESS[i].
           BEGIN=${GUESS[$i]/$MATCH*/}
           if [[ "$VERBOSITY" -eq 2 ]]; then
             print "\$BEGIN is $BEGIN"
@@ -142,13 +143,14 @@ fi
             if [[ "${ANSWER[$(($INDEX+1))]}" = "$MATCH" ]]; then
               print "$MATCH is already assigned to this position in \$ANSWER"
               print
-          else
-            # If not, add letter to ANSWER
-            ANSWER="${ANSWER:0:$INDEX}""$MATCH""${ANSWER:$(( $INDEX+1 ))}"
-            if [[ "$VERBOSITY" -eq 2 ]]; then
-              print "\$ANSWER is now $ANSWER"
+
+            else
+              # If not, add letter to ANSWER
+              ANSWER="${ANSWER:0:$INDEX}""$MATCH""${ANSWER:$(( $INDEX+1 ))}"
+              if [[ "$VERBOSITY" -eq 2 ]]; then
+                print "\$ANSWER is now $ANSWER"
+              fi
             fi
-          fi
 
 
         else
@@ -177,10 +179,11 @@ fi
               if [[ "$VERBOSITY" -eq 2 ]]; then
                 print "Letter in position $l of ANSWER is ${ANSWER[$l]}"
               fi
-              if [[ $ANSWER[$l] = $MATCH ]]; then
+
+              if [[ ${ANSWER[$l]} = $MATCH ]]; then
                 # If so, alert, do not change $ANSWER, and move to next occurrence of $MATCH
+                print "$MATCH is already assigned to this position in \$ANSWER"
                 if [[ "$VERBOSITY" -ge 1 ]]; then
-                  print "$MATCH is already assigned to this position in \$ANSWER"
                   print "No change to \$ANSWER"
                 fi
                 print
