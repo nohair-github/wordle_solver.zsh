@@ -1,11 +1,7 @@
 #!/bin/zsh
 
-# Script to find letters in GUESS which do not match (black square) in that position 
+# Script to find letters in GUESS which do not match (black square) in that position
 # without using tr which does not account for duplicates
-
-# OLO version
-# Determine unmatched letters in guess
-#  WRONG=$( echo "${GUESS[$i]}" | tr -d "$LET" | tr -d "$CORRECT" )
 
 # NEW version
 # Determine unmatched letters in guess
@@ -13,7 +9,17 @@
 # 1. Remove letters from GUESS which are in $LET (yellow square) leaving $WRONG (initial string)
   WRONG=$( echo "${GUESS[$i]}" | tr -d "$LET" )
 
-# 2. Remove letters from $WRONG which are in $CORRECT, except if dupes of correct letters
+# 2. Remove letters from $WRONG which are in $CORRECT
+
+# Remove duplicate letters in $CORRECT
+  if [[ "$VERBOSITY" -eq 2 ]]; then
+    print "\$CORRECT is $CORRECT"
+  fi
+  CORRECT=$( echo $CORRECT | fold -w1 | sort | uniq | tr -d '\n' )
+  if [[ "$VERBOSITY" -eq 2 ]]; then
+    print "\$CORRECT is now $CORRECT"
+  fi
+
 
 # Loop through letters in $CORRECT and check if letter is duplicated in GUESS
   for (( j=0; j<${#CORRECT}; j++ )); do
@@ -21,11 +27,11 @@
       print "Now checking letter ${CORRECT:$j:1}"
     fi
 
-    COUNT=$( grep -o ${CORRECT:$j:1} <<<${GUESS[i]} | wc -l )
+    COUNT=$( grep -o ${CORRECT:$j:1} <<<"${GUESS[i]}" | wc -l )
     if [[ $? -ne 0 ]]; then
       print "Error in grep - \$\?=$? line 32"
     fi
-    COUNT=${COUNT// }
+    COUNT="${COUNT// }"
     if [[ "$VERBOSITY" -eq 2 ]]; then
       print "\$COUNT is $COUNT"
     fi
@@ -39,7 +45,7 @@
       print "More than 3 duplicates of ${CORRECT:$j:1}! Error."
       exit 2
 
-#   If only one occurrence, delete from $WRONG
+    # If only one occurrence, delete from $WRONG
     elif [[ "$COUNT" -eq 1 ]]; then
 
       if [[ "$VERBOSITY" -eq 2 ]]; then
@@ -52,31 +58,36 @@
       WRONG=$( echo "$WRONG" | tr -d "${CORRECT:$j:1}" )
 
 
-#   If COUNT=2 or 3, loop through letters in $ANSWER
+    # If COUNT=2 or 3, loop through letters in $ANSWER
     elif [[ "$COUNT" -eq 2 ]] || [[ "$COUNT" -eq 3 ]]; then
 
-#     SET KEEP FLAG = 0
+      # Set KEEP flag = 0
       KEEP=0
 
-#     Loop through letters in $ANSWER and check if letter is this position
+      # Loop through letters in $ANSWER and check if letter is this position
       for (( k=0; k<${#ANSWER}; k++ )); do
+        # If letter in this position is already in $ANSWER, do not set flag to KEEP this letter
         if [[ "${ANSWER:$k:1}" = "${CORRECT:$j:1}" ]]; then
-#         If so, do not set FLAG
           if [[ "$VERBOSITY" -eq 2 ]]; then
             print "KEEP flag for ${CORRECT:$j:1} is not set in position $k"
           fi
-        else
-#         If not, keep letter in $WRONG - set flag KEEP
+        # If there is no letter in this position in $ANSWER, set flag to KEEP this letter
+        elif [[ "${ANSWER:$k:1}" = "." ]]; then
           if [[ "$VERBOSITY" -eq 2 ]]; then
             print "KEEP flag for ${CORRECT:$j:1} is set in position $k"
           fi
           KEEP=1
+        else
+          # If another letter is in $ANSWER already in this position,  do not set flag to KEEP
+          if [[ "$VERBOSITY" -eq 2 ]]; then
+            print "KEEP flag for ${CORRECT:$j:1} is not set in position $k"
+          fi
         fi
       done  # End of do loop through $ANSWER
 
 #     Check if flag KEEP is set
       if [[ "$KEEP" -gt 0 ]]; then
-#       If yes, do not delete ${CORRECT:$i:1}
+        # If yes, do not delete ${CORRECT:$j:1}
         if [[ "$VERBOSITY" -eq 2 ]]; then
           print "KEEP flag for ${CORRECT:$j:1} was set at $KEEP"
         fi
@@ -95,11 +106,11 @@
 
   done  # End of do loop through GUESS
 
-  # Now eliminate duplicate letters
+  # Now eliminate duplicate letters (should be unneccessary)
   if [[ "$VERBOSITY" -eq 2 ]]; then
     print "\$WRONG is $WRONG"
   fi
-  WRONG=$( echo $WRONG | tr -s 'a-z' )
+  WRONG=$( echo $WRONG | fold -w1 | sort | uniq | tr -d '\n' )
   if [[ "$VERBOSITY" -eq 2 ]]; then
     print "\$WRONG is now $WRONG"
   fi

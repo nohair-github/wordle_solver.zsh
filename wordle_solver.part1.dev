@@ -169,7 +169,7 @@ fi
               print "Letter $l: ${GUESS[$i][$l]}"
             fi
 
-            if [[ ${GUESS[$i][$l]} = $MATCH ]]; then
+            if [[ "${GUESS[$i][$l]}" = "$MATCH" ]]; then
               k=$(($k+1))
               print "$MATCH is found in position $l of guess"
 
@@ -177,7 +177,7 @@ fi
               if [[ "$VERBOSITY" -eq 2 ]]; then
                 print "Letter in position $l of ANSWER is ${ANSWER[$l]}"
               fi
-              if [[ $ANSWER[$l] = $MATCH ]]; then
+              if [[ "${ANSWER[$l]}" = "$MATCH" ]]; then
                 # If so, alert, do not change $ANSWER, and move to next occurrence of $MATCH
                 if [[ "$VERBOSITY" -ge 1 ]]; then
                   print "$MATCH is already assigned to this position in \$ANSWER"
