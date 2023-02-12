@@ -621,7 +621,6 @@ genie
 genre
 ghost
 ghoul
-giant
 giddy
 gipsy
 girly

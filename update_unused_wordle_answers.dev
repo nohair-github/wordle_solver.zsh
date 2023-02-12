@@ -3,7 +3,9 @@
 # update_unused_wordle_answers.v0.3
 # Updates file unused_wordle_answers.txt by removing current answer from list
 
-print "\$ANSWER is $ANSWER"
+if [[ "$VERBOSITY" -ge 1 ]]; then
+  print "\$ANSWER is $ANSWER"
+fi
 
 # Add ANSWER to past_wordle_answers.txt
 grep -q $ANSWER past_wordle_answers.txt
@@ -41,7 +43,10 @@ then
     print "corrected_unused_wordle_answers.text exists ... deleting"
   fi
   rm corrected_unused_wordle_answers.txt
-  print "Done"
+
+  if [[ "$VERBOSITY" -eq 2 ]]; then
+    print "Done"
+  fi
 fi
 touch corrected_unused_wordle_answers.txt
 
