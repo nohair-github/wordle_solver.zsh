@@ -567,6 +567,7 @@ unlit
 unmet
 unset
 upset
+usage
 usher
 using
 usurp
