@@ -1359,7 +1359,6 @@ solid
 sonar
 sooty
 sorry
-sound
 south
 space
 spank

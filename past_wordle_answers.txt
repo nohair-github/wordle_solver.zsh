@@ -482,6 +482,7 @@ solar
 solve
 sonic
 sooth
+sound
 sower
 spade
 spell

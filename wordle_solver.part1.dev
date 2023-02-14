@@ -8,8 +8,6 @@
 # Developed on macos 16.1 (21.6.0 Darwin Kernel Version 21.6.0: root:xnu-8020.240.7~1/RELEASE_X86_64)
 # and zsh (zsh 5.8.1 (x86_64-apple-darwin21.0)
 
-print
-
 if [[ "$VERBOSITY" -eq 2 ]]; then
   print "wordle_solver.part1.dev"
   print

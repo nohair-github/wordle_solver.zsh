@@ -132,7 +132,9 @@ if [[ "$HARD" -eq 1 ]]; then
 fi
 
 print
-print "Completed"
+if [[ "$VERBOSITY" -ge 1 ]]; then
+  print "Analysis completed"
+fi
 
 # Remove tmp files
 if [[ -e letter_list.tmp ]]; then

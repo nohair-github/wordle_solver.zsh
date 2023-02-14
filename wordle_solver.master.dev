@@ -118,7 +118,10 @@ for i in {1..6}; do
 
   while [[ "$VALID" -eq 0 ]]; do
   # do loop to check guess validity
-    print "Enter guesses as 5 letter word lowercase."
+    if [[ "$i" -eq 1 ]]; then
+      print "Enter guesses as 5 letter word lowercase."
+    fi
+
     print -n "Enter guess word no. $i:"
     read -r RESP1
     LEN="${#RESP1}"
@@ -179,7 +182,6 @@ for i in {1..6}; do
   fi
 
   . ./wordle_solver.part1.dev
-
   print
 
   if [[ "$VERBOSITY" -eq 2 ]]; then
@@ -303,7 +305,7 @@ for i in {1..6}; do
   print -n "Continue with next guess? (y/n)"
   read -r RESP5
   if [[ "$RESP5" = "y" ]]; then
-    print "OK"
+    print 
   else
     print "Finished"
     exit 0
