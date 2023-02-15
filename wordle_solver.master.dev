@@ -71,7 +71,7 @@ if [[ "$VERBOSITY" -ge 1 ]]; then
 fi
 print
 
-# Switch for hard mode 
+# Switch for hard mode
 print -n "Enable hard mode (must use any revealed hints in further guesses)? (y/n)"
 read -r "RESP"
 if [[ "$RESP" = "y" ]]; then
@@ -83,6 +83,7 @@ if [[ "$RESP" = "y" ]]; then
 else
   HARD=0
 fi
+print
 
 # Define array of guessed words
 declare -a GUESS
@@ -136,13 +137,15 @@ for i in {1..6}; do
 
       if [ $GREPERROR -ne 0 ]; then
         print "$RESP1 is not a valid guess."
-      else 
+      else
         VALID=1
-        if [[ "$VERBOSITY" -ge 1 ]]; then
+        if [[ "$VERBOSITY" -eq 2 ]]; then
           if [[ "$HARD" -eq 1 ]]; then
             print "$RESP1 is found in the current valid guess list (hard mode)"
+            print
           else
             print "$RESP1 is in the valid guess list"
+            print
           fi
         else
           print "$RESP1 is a valid guess"

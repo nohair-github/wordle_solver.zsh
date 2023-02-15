@@ -3,7 +3,7 @@
 # update_unused_wordle_answers.v0.3
 # Updates file unused_wordle_answers.txt by removing current answer from list
 
-if [[ "$VERBOSITY" -ge 1 ]]; then
+if [[ "$VERBOSITY" -eq 2 ]]; then
   print "\$ANSWER is $ANSWER"
 fi
 
