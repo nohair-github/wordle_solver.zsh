@@ -323,6 +323,7 @@ lusty
 lying
 lynch
 madam
+magic
 maize
 major
 manor

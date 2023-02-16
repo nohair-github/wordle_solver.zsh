@@ -222,7 +222,11 @@ fi
 
       # Check for grep errors
       if [[ $? -ne "0" ]]; then
-        print -n "Error in grep. Exiting."
+        if [[ "$VERBOSITY" -eq 2 ]]; then
+          print -n "Error in grep line 224"
+        fi
+        print "No remaining words matching "\""$ANSWER"\""."
+        print "Likely an error in entry"
         exit 4
       fi
 
