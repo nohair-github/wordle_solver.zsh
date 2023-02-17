@@ -1,0 +1,11 @@
+Wordle Solver installation and Use Instructions
+
+1. Clone/copy files in current release folder to a folder on your computer.
+2. cd into folder
+3. Enter "zsh wordle_solver.master.v0.4" to run
+4. Follow prompts
+5. Options are
+   -q quiet (default)
+   -v verbose
+   -d debug
+6. Hard mode flag is chosen from prompt after starting program. 
