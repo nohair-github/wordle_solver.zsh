@@ -1,11 +1,10 @@
 #!/bin/zsh
 
-# wordle_solver.part2.v0.3
-
+# wordle_solver.part2.v0.4
 # Wordle solver script by gsb
 
   if [[ "$VERBOSITY" -eq 2 ]]; then
-    print "wordle_solver.part2.v0.3"
+    print "wordle_solver.part2.v0.4"
   fi
   print
 
@@ -365,7 +364,7 @@
       print -n "Update unused_wordle_answers.txt? (y/n)"
       read -r RESP10
       if [[ "$RESP10" = "y" ]]; then
-	. ./update_unused_wordle_answers.v0.3
+	. ./update_unused_wordle_answers.v0.4
       fi
       exit 0
     fi
@@ -391,7 +390,7 @@
   fi
 
   if [[ "$VERBOSITY" -eq 2 ]]; then
-    print "Returning execution to wordle_solver.master.v0.3"
+    print "Returning execution to wordle_solver.master.v0.4"
   fi
 
   return

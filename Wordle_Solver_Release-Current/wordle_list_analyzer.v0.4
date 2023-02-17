@@ -1,8 +1,9 @@
 #!/bin/zsh
 
-# analyze_wordle_list_analyzer.v0.3: script to tabulate letters in unsolved positions
+# analyze_wordle_list_analyzer.v0.4: current version of wordle_list_analyzer.zsh:
+# script to tabulate letters in unsolved positions
 # and display frequency of letters in those positions in remaining wordle
-# answer set
+# answer set and, in hard mode, allowable guesses
 
 # Developed on macos 16.1 (21.6.0 Darwin Kernel Version 21.6.0: root:xnu-8020.240.7~1/RELEASE_X86_64)
 # and zsh (zsh 5.8.1 (x86_64-apple-darwin21.0)
@@ -131,7 +132,9 @@ if [[ "$HARD" -eq 1 ]]; then
 fi
 
 print
-print "Completed"
+if [[ "$VERBOSITY" -ge 1 ]]; then
+  print "Analysis completed"
+fi
 
 # Remove tmp files
 if [[ -e letter_list.tmp ]]; then
@@ -148,7 +151,7 @@ fi
 
 
 if [[ "$VERBOSITY" -eq 2 ]]; then
-  print "Returning execution to wordle_solver.master.v0.3"
+  print "Returning execution to wordle_solver.master.v0.4"
 fi
 
 return

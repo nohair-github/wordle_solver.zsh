@@ -553,7 +553,6 @@ final
 finch
 fishy
 fizzy
-flail
 flake
 flaky
 flame
@@ -622,7 +621,6 @@ genie
 genre
 ghost
 ghoul
-giant
 giddy
 gipsy
 girly
@@ -701,7 +699,6 @@ haute
 haven
 havoc
 hazel
-heady
 heard
 heart
 heave
@@ -860,7 +857,6 @@ macho
 macro
 madly
 mafia
-magic
 magma
 maker
 mambo
@@ -1203,7 +1199,6 @@ sadly
 safer
 sally
 salon
-salsa
 salty
 salve
 salvo
@@ -1362,7 +1357,6 @@ solid
 sonar
 sooty
 sorry
-sound
 south
 space
 spank
@@ -1402,7 +1396,6 @@ spurt
 squat
 squib
 stack
-stage
 staid
 stain
 stake
@@ -1607,7 +1600,6 @@ unzip
 upper
 urban
 urine
-usage
 usual
 utile
 utter

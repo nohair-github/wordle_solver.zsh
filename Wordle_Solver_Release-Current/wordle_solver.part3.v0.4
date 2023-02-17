@@ -1,16 +1,28 @@
 #!/bin/zsh
 
-# wordle_solver.part3.v0.3
+# wordle_solver.part3.v0.4
 # Wordle solver subscript by gsb
 
   if [[ "$VERBOSITY" -eq 2 ]]; then
-    print "wordle_solver.part3.v0.3"
+    print "wordle_solver.part3.v0.4"
   fi
   print
 
   # Determine unmatched letters in guess
-  WRONG=$( echo "${GUESS[$i]}" | tr -d "$LET" | tr -d "$CORRECT" )
 
+#  Call wordle_solver.part3a.v0.4
+
+  if [[ "$VERBOSITY" -eq 2 ]]; then
+    print "Calling wordle_solver.part3a.v0.4"
+  fi
+
+   . ./wordle_solver.part3a.v0.4
+
+  if [[ "$VERBOSITY" -eq 2 ]]; then
+    print "Execution returned to wordle_solver.part3.v0.4"
+  fi
+
+# Display unmatched letters
   if [[ "$WRONG" = "" ]]; then
     print "No unmatched letters. Wordle is solved - or very close."
     return
@@ -169,7 +181,7 @@
   cat list_$i.txt > list.tmp
 
   if [[ "$VERBOSITY" -eq 2 ]]; then
-    print "Returning execution to wordle_solver.master.v0.3"
+    print "Returning execution to wordle_solver.master.v0.4"
   fi
 
   return

@@ -1,20 +1,18 @@
 #!/bin/zsh
 
-# wordle_solver.part1.v0.3
+# wordle_solver.part1.v0.4
 
 # Wordle solver script by gsb
 
 # Developed on macos 16.1 (21.6.0 Darwin Kernel Version 21.6.0: root:xnu-8020.240.7~1/RELEASE_X86_64)
 # and zsh (zsh 5.8.1 (x86_64-apple-darwin21.0)
 
-print
-
 if [[ "$VERBOSITY" -eq 2 ]]; then
-  print "wordle_solver.part1.v0.3"
+  print "wordle_solver.part1.v0.4"
   print
 fi
 
-# Part 1: secondary loop to eliminate words not perfectly matched
+# Part 1: secondary loop to eliminate words without perfectly matched
 # letter(s) in correct position
 
   VALID=0
@@ -168,7 +166,7 @@ fi
               print "Letter $l: ${GUESS[$i][$l]}"
             fi
 
-            if [[ ${GUESS[$i][$l]} = $MATCH ]]; then
+            if [[ "${GUESS[$i][$l]}" = "$MATCH" ]]; then
               k=$(($k+1))
               print "$MATCH is found in position $l of guess"
 
@@ -176,7 +174,7 @@ fi
               if [[ "$VERBOSITY" -eq 2 ]]; then
                 print "Letter in position $l of ANSWER is ${ANSWER[$l]}"
               fi
-              if [[ $ANSWER[$l] = $MATCH ]]; then
+              if [[ "${ANSWER[$l]}" = "$MATCH" ]]; then
                 # If so, alert, do not change $ANSWER, and move to next occurrence of $MATCH
                 if [[ "$VERBOSITY" -ge 1 ]]; then
                   print "$MATCH is already assigned to this position in \$ANSWER"
@@ -223,7 +221,11 @@ fi
 
       # Check for grep errors
       if [[ $? -ne "0" ]]; then
-        print -n "Error in grep. Exiting."
+        if [[ "$VERBOSITY" -eq 2 ]]; then
+          print -n "Error in grep line 224"
+        fi
+        print "No remaining words matching "\""$ANSWER"\""."
+        print "Likely an error in entry"
         exit 4
       fi
 
@@ -303,7 +305,7 @@ fi
         print -n "Update unused_wordle_answers.txt? (y/n)"
         read -r RESP10
           if [[ "$RESP10" = "y" ]]; then
-             . ./update_unused_wordle_answers.v0.3
+             . ./update_unused_wordle_answers.v0.4
           fi
         exit 0
       fi
@@ -321,7 +323,7 @@ fi
   fi
 
   if [[ "$VERBOSITY" -eq 2 ]]; then
-    print "Returning execution to wordle_solver.master.v0.3"
+    print "Returning execution to wordle_solver.master.v0.4"
   fi
 
   return

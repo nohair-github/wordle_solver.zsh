@@ -67,8 +67,12 @@ changed analysis to be based on unused answers
 added handling of current_valid_guess_list.tmp in hard mode
 multiple other bug fixes
 
-Added since v0.3:
+Version 0.4 (2/16/23): Added since v0.3 -
 edited VERBOSITY switches and messages in update_unused_wordle_answers script
 added subscript 3a to handle duplicate letters in guess as part of part 3
+further bug fixes
+revised list analyzer to be based on abridged answer list excluding previous answers
 
-To be done: module to suggest guesses, further bug fixes, better tabulation of progress, and more tbd
+To be done: module to suggest guesses, further bug fixes, better tabulation of progress,
+add check for validity on entered letters in part 1 and 2,
+and more tbd

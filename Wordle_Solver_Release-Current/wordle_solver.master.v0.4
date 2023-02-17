@@ -1,13 +1,13 @@
 #!/bin/zsh
 
-# wordle_solver.master.v0.3
+# wordle_solver.master.v0.4
 # Wordle solver script by gsb
 
 # Developed on macos 12.6.2 (21.6.0 Darwin Kernel Version 21.6.0: root:xnu-8020.240.7~1/RELEASE_X86_64)
 # and zsh (zsh 5.8.1 (x86_64-apple-darwin21.0)
 
 print
-print "Wordle Solver (version 0.3)"
+print "Wordle Solver (version 0.4)"
 
 # See version_history.txt
 
@@ -20,7 +20,7 @@ VERBOSITY=0
 
 usage()
 {
-  echo " usage: wordle_solver.master.v0.3 [ -q --quiet ] [ -v --verbose ] [ -d --debug ] [ -h --help ] "
+  echo " usage: wordle_solver.master.v0.4 [ -q --quiet ] [ -v --verbose ] [ -d --debug ] [ -h --help ] "
 }
 
 error()
@@ -62,7 +62,7 @@ else
 fi
 
 if [[ "$VERBOSITY" -eq 2 ]]; then
-  print "wordle_solver.master.v0.3 script"
+  print "wordle_solver.master.v0.4 script"
 fi
 
 if [[ "$VERBOSITY" -ge 1 ]]; then
@@ -70,7 +70,7 @@ if [[ "$VERBOSITY" -ge 1 ]]; then
 fi
 print
 
-# Switch for hard mode 
+# Switch for hard mode
 print -n "Enable hard mode (must use any revealed hints in further guesses)? (y/n)"
 read -r "RESP"
 if [[ "$RESP" = "y" ]]; then
@@ -82,6 +82,7 @@ if [[ "$RESP" = "y" ]]; then
 else
   HARD=0
 fi
+print
 
 # Define array of guessed words
 declare -a GUESS
@@ -117,7 +118,10 @@ for i in {1..6}; do
 
   while [[ "$VALID" -eq 0 ]]; do
   # do loop to check guess validity
-    print "Enter guesses as 5 letter word lowercase."
+    if [[ "$i" -eq 1 ]]; then
+      print "Enter guesses as 5 letter word lowercase."
+    fi
+
     print -n "Enter guess word no. $i:"
     read -r RESP1
     LEN="${#RESP1}"
@@ -132,13 +136,15 @@ for i in {1..6}; do
 
       if [ $GREPERROR -ne 0 ]; then
         print "$RESP1 is not a valid guess."
-      else 
+      else
         VALID=1
-        if [[ "$VERBOSITY" -ge 1 ]]; then
+        if [[ "$VERBOSITY" -eq 2 ]]; then
           if [[ "$HARD" -eq 1 ]]; then
             print "$RESP1 is found in the current valid guess list (hard mode)"
+            print
           else
             print "$RESP1 is in the valid guess list"
+            print
           fi
         else
           print "$RESP1 is a valid guess"
@@ -173,12 +179,11 @@ for i in {1..6}; do
   # Call subscript part 1: Select words in list which contain perfectly matched letters in the proper position.
 
   if [[ "$VERBOSITY" -eq 2 ]]; then
-    print "calling subscript wordle_solver.part1.v0.3"
+    print "calling subscript wordle_solver.part1.v0.4"
     print
   fi
 
-  . ./wordle_solver.part1.v0.3
-
+  . ./wordle_solver.part1.v0.4
   print
 
   if [[ "$VERBOSITY" -eq 2 ]]; then
@@ -190,11 +195,11 @@ for i in {1..6}; do
   # which contain partially matched letters in the wrong position.
 
   if [[ "$VERBOSITY" -eq 2 ]]; then
-    print "calling subscript wordle_solver.part2.v0.3"
+    print "calling subscript wordle_solver.part2.v0.4"
     print
   fi
 
-  . ./wordle_solver.part2.v0.3
+  . ./wordle_solver.part2.v0.4
   print
 
   if [[ "$VERBOSITY" -eq 2 ]]; then
@@ -205,11 +210,11 @@ for i in {1..6}; do
   # Call subscript part 3: Eliminate words in list which contain unmatched letters.
 
   if [[ "$VERBOSITY" -eq 2 ]]; then
-    print "calling subscript wordle_solver.part3.v0.3"
+    print "calling subscript wordle_solver.part3.v0.4"
     print
   fi
 
-  . ./wordle_solver.part3.v0.3
+  . ./wordle_solver.part3.v0.4
   print
 
   if [[ "$VERBOSITY" -eq 2 ]]; then
@@ -242,7 +247,7 @@ for i in {1..6}; do
       print -n "Update unused_wordle_answers.txt? (y/n)"
       read -r RESP2
       if [[ "$RESP2" = "y" ]]; then
-        . ./update_unused_wordle_answers.v0.3
+        . ./update_unused_wordle_answers.v0.4
         VALID=1
         # Clear tmp files
         rm *.tmp
@@ -290,7 +295,7 @@ for i in {1..6}; do
   print -n "Analyze remaining words? (y/n)"
   read -r RESP4
   if [[ "$RESP4" = "y" ]]; then
-    . ./wordle_list_analyzer.v0.3
+    . ./wordle_list_analyzer.v0.4
   fi
 
   print
@@ -302,7 +307,7 @@ for i in {1..6}; do
   print -n "Continue with next guess? (y/n)"
   read -r RESP5
   if [[ "$RESP5" = "y" ]]; then
-    print "OK"
+    print
   else
     print "Finished"
     exit 0
