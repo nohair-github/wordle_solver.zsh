@@ -41,6 +41,7 @@ atoll
 atone
 audit
 augur
+avail
 awake
 awful
 badge
@@ -296,6 +297,7 @@ joust
 karma
 kebab
 khaki
+kiosk
 knock
 knoll
 koala
