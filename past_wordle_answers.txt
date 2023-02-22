@@ -427,6 +427,7 @@ retch
 retro
 rhino
 rhyme
+riper
 robin
 robot
 rogue
@@ -434,6 +435,7 @@ roomy
 rouge
 round
 royal
+ruddy
 ruder
 rupee
 rusty
@@ -521,6 +523,7 @@ stout
 stove
 sugar
 surer
+sweat
 sweet
 swill
 swirl

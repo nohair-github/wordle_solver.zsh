@@ -1166,7 +1166,6 @@ rigid
 rigor
 rinse
 ripen
-riper
 risen
 riser
 risky
@@ -1186,7 +1185,6 @@ route
 rover
 rowdy
 rower
-ruddy
 rugby
 ruler
 rumba
@@ -1455,7 +1453,6 @@ swarm
 swash
 swath
 swear
-sweat
 sweep
 swell
 swept
