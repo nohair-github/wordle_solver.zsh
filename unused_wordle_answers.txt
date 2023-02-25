@@ -539,7 +539,6 @@ ficus
 fiend
 fiery
 fifth
-fifty
 fight
 filer
 filet
