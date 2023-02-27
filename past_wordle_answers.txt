@@ -529,6 +529,7 @@ sweat
 sweet
 swill
 swirl
+syrup
 tacit
 tangy
 tapir
@@ -611,6 +612,7 @@ woken
 wooer
 world
 worry
+worse
 woven
 wrote
 wrung

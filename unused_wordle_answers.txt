@@ -1465,7 +1465,6 @@ swore
 sworn
 swung
 synod
-syrup
 tabby
 table
 taboo
@@ -1674,7 +1673,6 @@ woody
 wooly
 woozy
 wordy
-worse
 worst
 worth
 would
