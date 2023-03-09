@@ -5,7 +5,6 @@ abled
 abode
 abort
 about
-above
 abuse
 acorn
 acrid
@@ -1021,7 +1020,6 @@ piano
 piece
 piggy
 pinch
-pinky
 piper
 pitch
 pivot
@@ -1046,7 +1044,6 @@ plush
 poesy
 poise
 polar
-polka
 polyp
 poppy
 porch
@@ -1139,7 +1136,6 @@ recut
 reedy
 refer
 refit
-regal
 rehab
 reign
 relax
@@ -1537,7 +1533,6 @@ touch
 tough
 towel
 tower
-toxic
 toxin
 track
 tract
@@ -1644,7 +1639,6 @@ whale
 wharf
 wheat
 wheel
-where
 which
 whiff
 while

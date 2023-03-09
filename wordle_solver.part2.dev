@@ -268,13 +268,19 @@
 
 
       else
+	if [[ "$VERBOSITY" -ge 1 ]]; then
+	  print "$CHOICE appears in guess $COUNT times."
+	fi
+
+	INDEX=$(($l-1))
+        print "$CHOICE appears in position $INDEX of guess"
         print -n "Is this occurrence of $CHOICE a partial match (yellow square)? (y/n)"
         read -r RESP
         if [[ "$RESP" = "y" ]]; then
           # If so, add letter to template and exclude words
 
           # Set up a template based on current $ANSWER for regex
-          INDEX=$(($l-1))
+
           if [[ "$VERBOSITY" -eq 2 ]]; then
             print "\$INDEX is $INDEX"
           fi
