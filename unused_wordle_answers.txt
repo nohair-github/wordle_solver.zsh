@@ -477,7 +477,6 @@ elegy
 elfin
 elide
 elite
-email
 embed
 ember
 emcee
@@ -1150,7 +1149,6 @@ reset
 resin
 retry
 reuse
-revel
 revue
 rider
 ridge

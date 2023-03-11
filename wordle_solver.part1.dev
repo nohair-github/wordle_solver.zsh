@@ -137,9 +137,9 @@ fi
           fi
 
           # Check if $MATCH is already in $ANSWER in position $INDEX
-            if [[ "${ANSWER[$(($INDEX+1))]}" = "$MATCH" ]]; then
-              print "$MATCH is already assigned to this position in \$ANSWER"
-              print
+          if [[ "${ANSWER[$(($INDEX+1))]}" = "$MATCH" ]]; then
+            print "$MATCH is already assigned to this position in \$ANSWER"
+            print
           else
             # If not, add letter to ANSWER
             ANSWER="${ANSWER:0:$INDEX}""$MATCH""${ANSWER:$(( $INDEX+1 ))}"
@@ -147,7 +147,6 @@ fi
               print "\$ANSWER is now $ANSWER"
             fi
           fi
-
 
         else
           # $COUNT is 2 or 3
@@ -177,10 +176,10 @@ fi
               fi
               if [[ "${ANSWER[$l]}" = "$MATCH" ]]; then
                 # If so, alert, do not change $ANSWER, and move to next occurrence of $MATCH
-                if [[ "$VERBOSITY" -ge 1 ]]; then
-                  print "$MATCH is already assigned to this position in \$ANSWER"
-                  print "No change to \$ANSWER"
-                fi
+
+                print "$MATCH is already assigned to this position in \$ANSWER"
+                print "No change to \$ANSWER"
+
                 print
 
               else

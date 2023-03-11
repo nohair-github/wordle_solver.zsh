@@ -169,6 +169,7 @@ egret
 elder
 elope
 elude
+email
 enema
 enjoy
 epoch
@@ -431,6 +432,7 @@ renew
 repay
 retch
 retro
+revel
 rhino
 rhyme
 riper
