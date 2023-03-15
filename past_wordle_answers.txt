@@ -63,7 +63,9 @@ belly
 bench
 berth
 biome
+birth
 black
+blame
 bland
 bleed
 bloke
@@ -531,7 +533,9 @@ stout
 stove
 sugar
 surer
+surly
 sweat
+sweep
 sweet
 swill
 swirl

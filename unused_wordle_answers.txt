@@ -135,11 +135,9 @@ billy
 binge
 bingo
 birch
-birth
 bison
 bitty
 blade
-blame
 blank
 blare
 blast
@@ -1437,7 +1435,6 @@ sumac
 sunny
 super
 surge
-surly
 sushi
 swami
 swamp
@@ -1445,7 +1442,6 @@ swarm
 swash
 swath
 swear
-sweep
 swell
 swept
 swift
