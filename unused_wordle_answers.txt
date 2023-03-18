@@ -275,7 +275,6 @@ chose
 chuck
 chump
 churn
-cider
 circa
 civil
 clack
@@ -867,7 +866,6 @@ match
 mauve
 maybe
 mayor
-mealy
 meant
 meaty
 mecca

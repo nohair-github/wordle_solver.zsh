@@ -111,6 +111,7 @@ chill
 choke
 chunk
 chute
+cider
 cigar
 cinch
 civic
@@ -341,6 +342,7 @@ marsh
 masse
 matey
 maxim
+mealy
 merit
 metal
 midge
