@@ -626,7 +626,6 @@ glide
 glint
 globe
 gloss
-glove
 gnash
 gnome
 going
