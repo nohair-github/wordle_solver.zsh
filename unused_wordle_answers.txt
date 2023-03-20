@@ -326,7 +326,6 @@ crane
 crash
 crawl
 cream
-credo
 creed
 creek
 creep
