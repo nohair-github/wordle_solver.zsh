@@ -448,7 +448,6 @@ dumpy
 dunce
 dusky
 dusty
-duvet
 dwell
 dwelt
 dying

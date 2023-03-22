@@ -167,6 +167,7 @@ drink
 droll
 duchy
 dutch
+duvet
 dwarf
 eclat
 egret
