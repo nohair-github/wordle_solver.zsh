@@ -1377,7 +1377,6 @@ spurt
 squat
 squib
 stack
-staid
 stain
 stake
 stall
