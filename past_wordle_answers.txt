@@ -519,6 +519,7 @@ spray
 squad
 staff
 stage
+staid
 stair
 stale
 stalk
