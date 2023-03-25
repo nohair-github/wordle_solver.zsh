@@ -612,6 +612,7 @@ vivid
 vodka
 voice
 vomit
+voter
 vouch
 wacky
 waltz
