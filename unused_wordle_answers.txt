@@ -1566,7 +1566,6 @@ undid
 undue
 union
 unity
-untie
 until
 unwed
 unzip
