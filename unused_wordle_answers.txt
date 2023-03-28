@@ -715,7 +715,6 @@ hover
 humid
 humus
 hunch
-hurry
 husky
 hussy
 hyena
