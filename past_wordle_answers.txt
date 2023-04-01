@@ -185,6 +185,7 @@ erode
 error
 essay
 evade
+every
 exist
 exult
 fanny

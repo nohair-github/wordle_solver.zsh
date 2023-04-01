@@ -493,7 +493,6 @@ ethic
 ethos
 etude
 event
-every
 evict
 evoke
 exact
