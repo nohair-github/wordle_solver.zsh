@@ -215,6 +215,7 @@ float
 flock
 flood
 floor
+flora
 floss
 flout
 fluff
