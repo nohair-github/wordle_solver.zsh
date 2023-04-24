@@ -6,7 +6,7 @@ Installation: clone git repository into directory of your choice
 
 Use:
 cd into wordle directory
-enter "zsh wordle_solver.master.v0.3" and follow prompts
+enter "zsh wordle_solver.master.dev" and follow prompts
 
 Version history:
 See version_history.txt
